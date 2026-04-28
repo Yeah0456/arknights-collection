@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>明日方舟 · 收集册 (完整版)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+        #app {
+            width: 100%;
+            min-height: 100vh;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        .art-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+        .header {
+            padding: 20px 32px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .stats {
+            font-size: 0.85rem;
+            color: #666;
+            background: #f5f5f5;
+            padding: 6px 16px;
+            border-radius: 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .stats span {
+            font-weight: 600;
+            color: #2196F3;
+        }
+        .main-content {
+            flex: 1;
+            padding: 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .filter-section {
+            margin-bottom: 8px;
+        }
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .filter-chip {
+            background: #f1f3f5;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #444;
+            cursor: pointer;
+        }
+        .filter-chip.active {
+            background: #2196F3;
+            color: #fff;
+            font-weight: 500;
+        }
+        .class-filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .class-filter-chip {
+            background: #f5f5f5;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            color: #555;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .class-filter-chip.active {
+            background: #e3f2fd;
+            border-color: #2196F3;
+            color: #0d47a1;
+            font-weight: 600;
+        }
+        .adv-filter-toggle {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            color: #2196F3;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            transition: 0.2s;
+        }
+        .adv-filter-toggle:hover {
+            background: #e9ecef;
+        }
+        .adv-filter-panel {
+            background: #fefefe;
+            border: 1px solid #e9ecef;
+            border-radius: 24px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            display: none;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+        .adv-filter-panel.open {
+            display: flex;
+        }
+        .adv-filter-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .adv-filter-group label {
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+        .adv-radio-group {
+            display: flex;
+            gap: 12px;
+        }
+        .adv-radio-group span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .sort-select {
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+            background: #fff;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .search-wrapper {
+            margin-bottom: 16px;
+            width: 100%;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 40px;
+            border: 1px solid #e0e0e0;
+            background: #fafafa;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .search-input:focus {
+            border-color: #2196F3;
+            background: #fff;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            padding-bottom: 24px;
+        }
+        .card {
+            background: #fafafa;
+            border-radius: 18px;
+            padding: 12px 16px 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.1s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        }
+        .card:active {
+            transform: scale(0.97);
+        }
+        .card.graduated-card {
+            background: #fff9e6;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15);
+            border-color: #ffe082;
+        }
+        .card-checkbox-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .card-select-checkbox {
+            transform: scale(1.4);
+            cursor: pointer;
+            accent-color: #2196F3;
+        }
+        .avatar-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .profession-tag-vertical {
+            position: absolute;
+            left: -28px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #607D8B;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 4px 4px;
+            border-radius: 10px;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            white-space: nowrap;
+            line-height: 1.2;
+        }
+        .avatar {
+            width: 90px;
+            height: 90px;
+            background: #e9ecef;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 1;
+        }
+        .card .name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1e1e1e;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+        .stars {
+            color: #FFB300;
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+        .status-dot {
+            position: absolute;
+            top: 30px;
+            right: 12px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .empty-state {
+            grid-column: 1/-1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 1.1rem;
+            padding: 40px 0;
+        }
+        .batch-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .btn.danger {
+            background: #f44336;
+            color: white;
+        }
+        .btn.danger:hover {
+            background: #d32f2f;
+        }
+        .btn.danger:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .bottom-nav {
+            display: flex;
+            border-top: 1px solid #eee;
+            background: #fff;
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+            padding: 0 32px;
+        }
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 16px 8px;
+            font-size: 0.95rem;
+            color: #888;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .nav-item:hover {
+            color: #2196F3;
+        }
+        .nav-item.active {
+            color: #2196F3;
+            font-weight: 600;
+        }
+        .paste-area {
+            border: 2px dashed #ccc;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            color: #888;
+            background: #fafafa;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+        .paste-area:hover {
+            border-color: #aaa;
+        }
+        .paste-area.filled {
+            border-color: #4CAF50;
+            background: #f1f8e9;
+        }
+        .paste-area img {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 12px;
+            margin: 8px 0;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #444;
+            display: block;
+            margin-bottom: 8px;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            background: #fafafa;
+            outline: none;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: #2196F3;
+            background: #fff;
+        }
+        .btn {
+            background: #2196F3;
+            color: #fff;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #1976D2;
+        }
+        .btn.secondary {
+            background: #f5f5f5;
+            color: #1e1e1e;
+        }
+        .btn.secondary:hover {
+            background: #e0e0e0;
+        }
+        .btn.small {
+            width: auto;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+        .sync-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            padding: 16px 0;
+        }
+        .tag-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tag-option {
+            padding: 8px 18px;
+            border-radius: 20px;
+            background: #f0f0f0;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+        .tag-option:hover {
+            background: #e3f2fd;
+        }
+        .tag-option.selected {
+            background: #e3f2fd;
+            border-color: #2196F3;
+            color: #0d47a1;
+            font-weight: 600;
+        }
+        .star-selector {
+            font-size: 2rem;
+            letter-spacing: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .star-selector span {
+            color: #ddd;
+            transition: 0.1s;
+        }
+        .star-selector span:hover {
+            color: #FFC107;
+        }
+        .star-selector span.active {
+            color: #FFC107;
+        }
+        .delete-tag-btn {
+            background: none;
+            border: none;
+            color: #f44336;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .batch-result {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 0.9rem;
+            color: #333;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+            white-space: pre-wrap;
+        }
+        .edit-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            background: #f0f4ff;
+            border-radius: 14px;
+            padding: 16px 20px;
+            transition: opacity 0.2s;
+        }
+        .edit-row label {
+            min-width: 80px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #444;
+            margin-bottom: 0;
+        }
+        .edit-row input {
+            flex: 1;
+        }
+        .graduate-btn {
+            width: 80px;
+            height: 42px;
+            border-radius: 21px;
+            border: none;
+            background: #2196F3;
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .graduate-btn:hover {
+            background: #1976D2;
+        }
+        .graduate-btn.graduated {
+            background: #9E9E9E;
+        }
+        .edit-row.graduated-row {
+            opacity: 0.5;
+        }
+        .gender-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .gender-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: normal;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+        .detail-nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .nav-arrow {
+            background: #f0f2f5;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #2196F3;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover {
+            background: #e0e4e8;
+        }
+        .nav-arrow.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+            color: #999;
+        }
+        .role-counter {
+            font-size: 0.85rem;
+            background: #f5f5f5;
+            padding: 4px 12px;
+            border-radius: 24px;
+            color: #555;
+        }
+        .compress-canvas {
+            position: fixed;
+            left: -9999px;
+            top: -9999px;
+            width: 128px;
+            height: 128px;
+        }
+        .storage-info-bar {
+            text-align: center;
+            font-size: 0.78rem;
+            color: #555;
+            padding: 4px 0 10px 0;
+            letter-spacing: 0.3px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <canvas id="imageCompressCanvas" class="compress-canvas"></canvas>
+    <script>
+        (function() {
+            const STORAGE_KEY = 'collector_app_data';
+            const CLASS_OPTIONS = ['先锋', '近卫', '狙击', '重装', '医疗', '辅助', '术师', '特种'];
+            const defaultData = {
+                roles: [],
+                tags: [
+                    { id: 'tag1', name: '已收集', color: '#4CAF50', countAsCollected: true },
+                    { id: 'tag2', name: '未收集', color: '#9E9E9E', countAsCollected: false }
+                ],
+                properties: ['职业']
+            };
+
+            let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultData;
+            appData.roles.forEach(r => {
+                if (r.stars === undefined) r.stars = 1;
+                if (!r.props) r.props = {};
+                if (r.level === undefined) r.level = '';
+                if (r.skillLevel === undefined) r.skillLevel = '';
+                if (r.module === undefined) r.module = '';
+                if (r.levelGraduated === undefined) r.levelGraduated = false;
+                if (r.skillGraduated === undefined) r.skillGraduated = false;
+                if (r.moduleGraduated === undefined) r.moduleGraduated = false;
+                if (r.gender === undefined) r.gender = '';
+                if (r.releaseDate === undefined) r.releaseDate = '';
+            });
+
+            const COMPRESS_SIZE = 128;
+            const COMPRESS_QUALITY = 0.7;
+            let selectedRoleIds = new Set();
+
+            async function compressImage(blobOrDataUrl) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    let src = blobOrDataUrl;
+                    if (blobOrDataUrl instanceof Blob) src = URL.createObjectURL(blobOrDataUrl);
+                    img.onload = () => {
+                        if (src instanceof URL && src.startsWith('blob:')) URL.revokeObjectURL(src);
+                        let width = img.width, height = img.height;
+                        if (width > COMPRESS_SIZE || height > COMPRESS_SIZE) {
+                            if (width > height) {
+                                height = Math.round(height * (COMPRESS_SIZE / width));
+                                width = COMPRESS_SIZE;
+                            } else {
+                                width = Math.round(width * (COMPRESS_SIZE / height));
+                                height = COMPRESS_SIZE;
+                            }
+                        }
+                        const canvas = document.getElementById('imageCompressCanvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', COMPRESS_QUALITY));
+                    };
+                    img.onerror = () => reject(new Error('图片加载失败'));
+                    img.src = src;
+                });
+            }
+
+            async function recompressAllImages(showProgress = true) {
+                let changed = false;
+                for (let i = 0; i < appData.roles.length; i++) {
+                    const role = appData.roles[i];
+                    if (role.image && role.image.startsWith('data:image')) {
+                        try {
+                            const compressed = await compressImage(role.image);
+                            if (compressed !== role.image) {
+                                role.image = compressed;
+                                changed = true;
+                            }
+                            if (showProgress && i % 10 === 0) await new Promise(r => setTimeout(r, 10));
+                        } catch (e) { console.warn('压缩失败', role.name, e); }
+                    }
+                }
+                if (changed) {
+                    saveData(true);
+                    if (showProgress) alert('所有图片已重新压缩为高清版。');
+                    render();
+                }
+            }
+
+            function getStorageUsage() {
+                let total = 0;
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    const val = localStorage.getItem(key);
+                    total += (key.length + val.length) * 2;
+                }
+                return total;
+            }
+
+            function showStorageInfo() {
+                const used = getStorageUsage();
+                const usedMB = (used / 1024 / 1024).toFixed(2);
+                const panel = document.getElementById('storageInfoPanel');
+                if (panel) {
+                    panel.innerHTML = `💾 已用 ${usedMB} MB / 10 GB`;
+                    panel.style.color = used > 8 * 1024 * 1024 ? '#f57c00' : '#555';
+                    panel.style.fontWeight = used > 8 * 1024 * 1024 ? '500' : 'normal';
+                }
+            }
+
+            function saveData(skipCheck = false) {
+                try {
+                    if (!skipCheck) {
+                        const testStr = JSON.stringify(appData);
+                        if (testStr.length > 9 * 1024 * 1024) {
+                            if (!confirm('即将超过10MB存储限制，是否继续？')) return false;
+                        }
+                    }
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+                    showStorageInfo();
+                    return true;
+                } catch (e) {
+                    alert(e.name === 'QuotaExceededError' ? '存储空间严重不足！' : '保存失败：' + e.message);
+                    return false;
+                }
+            }
+
+            function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
+
+            let currentView = 'home';
+            let editingRoleId = null;
+            let primaryFilter = 'all';
+            let secondaryFilter = '';
+            let homeSearchKeyword = '';
+            let advPanelOpen = false;
+            let genderFilter = 'all';
+            let sortMode = 'smart';
+            let detailNavList = [];
+            let detailCurrentIdx = -1;
+
+            function isFullyGraduated(role) {
+                return role.levelGraduated && role.skillGraduated && role.moduleGraduated;
+            }
+
+            function sortRoles(roles) {
+                if (sortMode === 'release_asc') return [...roles].sort((a,b) => (a.releaseDate||'').localeCompare(b.releaseDate||''));
+                if (sortMode === 'release_desc') return [...roles].sort((a,b) => (b.releaseDate||'').localeCompare(a.releaseDate||''));
+                return [...roles].sort((a,b) => {
+                    const aGrad = isFullyGraduated(a) ? 1 : 0;
+                    const bGrad = isFullyGraduated(b) ? 1 : 0;
+                    if (aGrad !== bGrad) return aGrad - bGrad;
+                    return (b.stars||1) - (a.stars||1);
+                });
+            }
+
+            function getFilteredRoleList() {
+                let filtered = appData.roles;
+                if (primaryFilter === '未收集') filtered = filtered.filter(r => r.tags && r.tags.includes('未收集'));
+                else if (primaryFilter === '已收集') filtered = filtered.filter(r => r.tags && r.tags.includes('已收集') && !isFullyGraduated(r));
+                else if (primaryFilter === '毕业') filtered = filtered.filter(r => isFullyGraduated(r));
+                if (secondaryFilter) filtered = filtered.filter(r => r.props && r.props.职业 === secondaryFilter);
+                if (homeSearchKeyword.trim()) {
+                    const kw = homeSearchKeyword.trim().toLowerCase();
+                    filtered = filtered.filter(r => r.name.toLowerCase().includes(kw));
+                }
+                if (genderFilter !== 'all') filtered = filtered.filter(r => r.gender === genderFilter);
+                return sortRoles(filtered);
+            }
+
+            function updateDetailNavigation(currentRoleId) {
+                const list = getFilteredRoleList();
+                detailNavList = list.map(r => r.id);
+                detailCurrentIdx = detailNavList.findIndex(id => id === currentRoleId);
+                if (detailCurrentIdx === -1 && detailNavList.length) {
+                    detailCurrentIdx = 0;
+                    editingRoleId = detailNavList[0];
+                }
+            }
+
+            function saveCurrentDetailChanges() {
+                if (!editingRoleId) return false;
+                const role = appData.roles.find(r => r.id === editingRoleId);
+                if (!role) return false;
+                const nameInput = document.getElementById('editName');
+                if (!nameInput) return false;
+                try {
+                    const starSpans = document.querySelectorAll('#editStarSelector span.active');
+                    const levelInput = document.getElementById('editLevel');
+                    const skillInput = document.getElementById('editSkillLevel');
+                    const moduleInput = document.getElementById('editModule');
+                    const levelBtn = document.getElementById('levelGraduateBtn');
+                    const skillBtn = document.getElementById('skillGraduateBtn');
+                    const moduleBtn = document.getElementById('moduleGraduateBtn');
+                    const tagOptions = document.querySelectorAll('#editTagSelector .tag-option.selected');
+                    const genderRadio = document.querySelector('input[name="editGender"]:checked');
+                    const releaseDateInput = document.getElementById('editReleaseDate');
+
+                    let selectedStars = starSpans.length || role.stars;
+                    let levelGraduated = levelBtn ? levelBtn.classList.contains('graduated') : role.levelGraduated;
+                    let skillGraduated = skillBtn ? skillBtn.classList.contains('graduated') : role.skillGraduated;
+                    let moduleGraduated = moduleBtn ? moduleBtn.classList.contains('graduated') : role.moduleGraduated;
+                    let selectedStatus = tagOptions.length ? tagOptions[0].dataset.tag : (role.tags[0] || '未收集');
+
+                    if (window._detailNewImageData) {
+                        role.image = window._detailNewImageData;
+                        window._detailNewImageData = null;
+                    }
+
+                    role.name = nameInput.value.trim() || role.name;
+                    role.stars = selectedStars;
+                    role.level = levelInput ? levelInput.value.trim() : role.level;
+                    role.skillLevel = skillInput ? skillInput.value.trim() : role.skillLevel;
+                    role.module = moduleInput ? moduleInput.value.trim() : role.module;
+                    role.levelGraduated = levelGraduated;
+                    role.skillGraduated = skillGraduated;
+                    role.moduleGraduated = moduleGraduated;
+                    role.gender = genderRadio ? genderRadio.value : '';
+                    role.releaseDate = releaseDateInput ? releaseDateInput.value : '';
+
+                    if (levelGraduated && skillGraduated && moduleGraduated) role.tags = ['已收集'];
+                    else role.tags = [selectedStatus];
+
+                    saveData();
+                    return true;
+                } catch (e) { console.error(e); alert("保存修改出错"); return false; }
+            }
+
+            function navigateToDetailByOffset(offset) {
+                if (!detailNavList.length) return;
+                let newIdx = detailCurrentIdx + offset;
+                if (newIdx < 0) newIdx = 0;
+                if (newIdx >= detailNavList.length) newIdx = detailNavList.length - 1;
+                if (newIdx === detailCurrentIdx) return;
+                saveCurrentDetailChanges();
+                editingRoleId = detailNavList[newIdx];
+                detailCurrentIdx = newIdx;
+                render();
+            }
+
+            function goBackToHome() {
+                if (currentView !== 'home') { currentView = 'home'; editingRoleId = null; render(); }
+            }
+
+            function parseBatchText(text) {
+                const lines = text.split('\n').filter(l => l.trim());
+                const results = [];
+                for (let line of lines) {
+                    const parts = line.trim().split(/[\t|]+/).map(s => s.trim()).filter(s => s);
+                    if (!parts.length) continue;
+                    let name = parts[0], profession = '', stars = 1, tags = [], props = {};
+                    for (let i = 1; i < parts.length; i++) {
+                        const w = parts[i];
+                        if (CLASS_OPTIONS.includes(w)) { profession = w; continue; }
+                        if (w === '已收集' || w === '未收集') { tags = [w]; continue; }
+                        let starMatch = w.match(/^(\d+)★?$/) || w.match(/^★(\d+)$/);
+                        if (starMatch) { stars = parseInt(starMatch[1]); if (stars<1) stars=1; if(stars>6) stars=6; continue; }
+                        props[`属性${i}`] = w;
+                    }
+                    if (!tags.length) tags = ['未收集'];
+                    results.push({
+                        id: genId(), name, image: '', tags, stars,
+                        props: profession ? { 职业: profession, ...props } : props,
+                        notes: '', level: '', skillLevel: '', module: '',
+                        levelGraduated: false, skillGraduated: false, moduleGraduated: false,
+                        gender: '', releaseDate: ''
+                    });
+                }
+                return results;
+            }
+
+            function render() {
+                const appEl = document.getElementById('app');
+                if (!appEl) return;
+                if (currentView === 'detail' && editingRoleId) updateDetailNavigation(editingRoleId);
+                if (currentView === 'home') renderHome(appEl);
+                else if (currentView === 'add') renderAddPage(appEl);
+                else if (currentView === 'tags') renderTagsPage(appEl);
+                else if (currentView === 'detail') renderDetailPage(appEl);
+                showStorageInfo();
+            }
+
+            function renderHome(container) {
+                const total = appData.roles.length;
+                const collected = appData.roles.filter(r => r.tags && r.tags.some(tn => appData.tags.some(t => t.name === tn && t.countAsCollected))).length;
+                container.innerHTML = `
+            <div class="header"><h1 class="art-title">明日方舟</h1><div class="stats">📊 <span>${collected}</span>/${total}</div></div>
+            <div class="main-content" id="homeContent">
+                <div id="storageInfoPanel" class="storage-info-bar">💾 计算中...</div>
+                <div class="filter-section">
+                    <div class="search-wrapper"><input type="search" class="search-input" id="searchRoleInput" placeholder="🔍 搜索角色名称" value="${escapeHtml(homeSearchKeyword)}"></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <div class="filter-bar" id="primaryFilterBar">
+                            <button class="filter-chip" data-filter="未收集">未收集</button>
+                            <button class="filter-chip" data-filter="已收集">已收集</button>
+                            <button class="filter-chip active" data-filter="all">全部</button>
+                            <button class="filter-chip" data-filter="毕业">毕业</button>
+                        </div>
+                        <div class="adv-filter-toggle" id="advFilterToggle">⚙️ 高级筛选 ▼</div>
+                    </div>
+                    <div class="adv-filter-panel" id="advFilterPanel">
+                        <div class="adv-filter-group"><label>性别：</label><div class="adv-radio-group"><span><input type="radio" name="genderFilter" value="all" ${genderFilter==='all'?'checked':''}> 全部</span><span><input type="radio" name="genderFilter" value="男" ${genderFilter==='男'?'checked':''}> 男</span><span><input type="radio" name="genderFilter" value="女" ${genderFilter==='女'?'checked':''}> 女</span></div></div>
+                        <div class="adv-filter-group"><label>排序方式：</label><select id="sortModeSelect" class="sort-select"><option value="smart" ${sortMode==='smart'?'selected':''}>智能排序(毕业+星级)</option><option value="release_asc" ${sortMode==='release_asc'?'selected':''}>实装正序(旧→新)</option><option value="release_desc" ${sortMode==='release_desc'?'selected':''}>实装倒序(新→旧)</option></select></div>
+                    </div>
+                    <div class="class-filter-bar" id="classFilterBar">${CLASS_OPTIONS.map(c => `<button class="class-filter-chip" data-class="${c}">${c}</button>`).join('')}</div>
+                </div>
+                <div class="batch-actions" id="batchActions">
+                    <button class="btn small secondary" id="selectAllBtn">✅ 全选当前</button>
+                    <button class="btn small secondary" id="deselectAllBtn">⬜ 取消全选</button>
+                    <button class="btn small danger" id="deleteSelectedBtn" disabled>🗑️ 删除所选 (<span id="selectedCount">0</span>)</button>
+                </div>
+                <div id="roleGridContainer">${renderRoleGrid()}</div>
+                <div class="sync-buttons"><button class="btn secondary small" id="exportBtn">📤 导出备份</button><button class="btn secondary small" id="importBtn">📥 导入恢复</button></div>
+            </div>
+            <div class="bottom-nav"><div class="nav-item active" data-view="home">🏠 收集册</div><div class="nav-item" data-view="add">➕ 添加</div><div class="nav-item" data-view="tags">🏷️ 标签</div></div>`;
+                attachHomeEvents();
+            }
+
+            function renderRoleGrid() {
+                const filtered = getFilteredRoleList();
+                if (!filtered.length) return `<div class="empty-state">✨ 暂无角色<br>点击下方 + 添加</div>`;
+                return `<div class="grid">${filtered.map(role => {
+                const fullyGrad = isFullyGraduated(role);
+                const has = role.tags && role.tags.some(tn => appData.tags.some(t => t.name === tn && t.countAsCollected));
+                const dot = has ? '#4CAF50' : '#ccc';
+                const avatarStyle = role.image ? `background-image:url('${role.image.replace(/'/g, "\\'")}')` : '';
+                const profession = role.props && role.props.职业 || '';
+                return `<div class="card ${fullyGrad ? 'graduated-card' : ''}" data-role-id="${role.id}">
+                    <div class="card-checkbox-wrapper">
+                        <input type="checkbox" class="card-select-checkbox" data-role-id="${role.id}" ${selectedRoleIds.has(role.id) ? 'checked' : ''}>
+                    </div>
+                    <div class="status-dot" style="background:${dot}"></div>
+                    <div class="avatar-container">
+                        ${profession ? `<div class="profession-tag-vertical">${profession}</div>` : ''}
+                        <div class="avatar" style="${avatarStyle}"></div>
+                    </div>
+                    <div class="name">${escapeHtml(role.name)}</div>
+                    <div class="stars">${getStarString(role.stars)}</div>
+                </div>`;
+            }).join('')}</div>`;
+            }
+
+            function getStarString(s) {
+                return '★'.repeat(s);
+            }
+
+            function updateBatchUI() {
+                const deleteBtn = document.getElementById('deleteSelectedBtn');
+                const countSpan = document.getElementById('selectedCount');
+                if (deleteBtn && countSpan) {
+                    countSpan.textContent = selectedRoleIds.size;
+                    deleteBtn.disabled = selectedRoleIds.size === 0;
+                }
+            }
+
+            function updateFilterUI() {
+                document.querySelectorAll('#primaryFilterBar .filter-chip').forEach(btn => btn.classList.toggle('active', btn.dataset.filter === primaryFilter));
+                document.querySelectorAll('#classFilterBar .class-filter-chip').forEach(btn => btn.classList.toggle('active', btn.dataset.class === secondaryFilter));
+                document.getElementById('roleGridContainer').innerHTML = renderRoleGrid();
+                attachCardClicks();
+                attachCheckboxEvents();
+                updateBatchUI();
+            }
+
+            function attachCheckboxEvents() {
+                document.querySelectorAll('.card-select-checkbox').forEach(cb => {
+                    cb.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const roleId = cb.dataset.roleId;
+                        if (cb.checked) selectedRoleIds.add(roleId);
+                        else selectedRoleIds.delete(roleId);
+                        updateBatchUI();
+                    });
+                });
+            }
+
+            function attachHomeEvents() {
+                document.querySelectorAll('#primaryFilterBar .filter-chip').forEach(btn => btn.addEventListener('click', () => {
+                    primaryFilter = btn.dataset.filter; secondaryFilter = ''; updateFilterUI();
+                }));
+                document.querySelectorAll('#classFilterBar .class-filter-chip').forEach(btn => btn.addEventListener('click', () => {
+                    const c = btn.dataset.class; secondaryFilter = (secondaryFilter === c) ? '' : c; updateFilterUI();
+                }));
+                const searchInput = document.getElementById('searchRoleInput');
+                if(searchInput) searchInput.addEventListener('input', (e) => { homeSearchKeyword = e.target.value; updateFilterUI(); });
+
+                const toggle = document.getElementById('advFilterToggle'), panel = document.getElementById('advFilterPanel');
+                if(toggle && panel) {
+                    if(advPanelOpen) panel.classList.add('open');
+                    toggle.addEventListener('click', () => {
+                        advPanelOpen = !advPanelOpen; panel.classList.toggle('open', advPanelOpen);
+                        toggle.innerHTML = advPanelOpen ? '⚙️ 高级筛选 ▲' : '⚙️ 高级筛选 ▼';
+                    });
+                    document.querySelectorAll('input[name="genderFilter"]').forEach(r => r.addEventListener('change', (e) => { genderFilter = e.target.value; updateFilterUI(); }));
+                    const sortSelect = document.getElementById('sortModeSelect');
+                    if(sortSelect) sortSelect.addEventListener('change', (e) => { sortMode = e.target.value; updateFilterUI(); });
+                }
+
+                attachCardClicks();
+                attachCheckboxEvents();
+
+                document.getElementById('selectAllBtn').addEventListener('click', () => {
+                    getFilteredRoleList().forEach(r => selectedRoleIds.add(r.id));
+                    updateFilterUI();
+                });
+                document.getElementById('deselectAllBtn').addEventListener('click', () => {
+                    selectedRoleIds.clear(); updateFilterUI();
+                });
+                document.getElementById('deleteSelectedBtn').addEventListener('click', () => {
+                    if(selectedRoleIds.size === 0) return;
+                    if(confirm(`确定要永久删除选中的 ${selectedRoleIds.size} 个角色吗？`)) {
+                        appData.roles = appData.roles.filter(r => !selectedRoleIds.has(r.id));
+                        selectedRoleIds.clear();
+                        if(saveData()) updateFilterUI(); else alert("删除失败");
+                    }
+                });
+
+                document.getElementById('exportBtn').addEventListener('click', () => {
+                    const dataStr = JSON.stringify(appData);
+                    const blob = new Blob([dataStr], {type:'application/json'});
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a'); a.href = url;
+                    a.download = `收藏册_${new Date().toISOString().slice(0,10)}.json`; a.click();
+                    URL.revokeObjectURL(url);
+                });
+                document.getElementById('importBtn').addEventListener('click', () => {
+                    const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';
+                    inp.onchange = (e) => {
+                        const file = e.target.files[0]; if(!file) return;
+                        const reader = new FileReader();
+                        reader.onload = (ev) => {
+                            try {
+                                const imported = JSON.parse(ev.target.result);
+                                if(imported.roles && imported.tags) {
+                                    if(confirm('覆盖当前数据？')) {
+                                        appData = imported; selectedRoleIds.clear(); saveData(true);
+                                        currentView='home'; homeSearchKeyword=''; genderFilter='all'; sortMode='smart'; render();
+                                    }
+                                } else alert('格式错误');
+                            } catch(err) { alert('解析失败'); }
+                        };
+                        reader.readAsText(file);
+                    };
+                    inp.click();
+                });
+                document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', (e) => {
+                    const v = i.dataset.view;
+                    if(v==='home') currentView='home';
+                    else if(v==='add') { currentView='add'; editingRoleId=null; }
+                    else if(v==='tags') currentView='tags';
+                    render();
+                }));
+                updateBatchUI();
+            }
+
+            function attachCardClicks() {
+                document.querySelectorAll('.card').forEach(c => c.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('card-select-checkbox')) return;
+                    if(c.dataset.roleId) { editingRoleId = c.dataset.roleId; currentView = 'detail'; render(); }
+                }));
+            }
+
+            function escapeHtml(t) { return String(t).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+            // ========== 添加页面 ==========
+            function renderAddPage(container) {
+                container.innerHTML = `
+            <div class="header"><h1 class="art-title">明日方舟</h1><button class="btn secondary" id="backToHomeBtn">← 返回</button></div>
+            <div class="main-content" style="max-width:600px; margin:0 auto;">
+                <div class="form-group"><label>角色名称 *</label><input id="roleNameInput" placeholder="例如：能天使"></div>
+                <div class="form-group"><label>性别</label><div class="gender-group"><label><input type="radio" name="gender" value="男"> 男</label><label><input type="radio" name="gender" value="女"> 女</label><label><input type="radio" name="gender" value="" checked> 未知</label></div></div>
+                <div class="form-group"><label>实装日期</label><input id="releaseDateInput" type="date" placeholder="YYYY-MM-DD"></div>
+                <div class="form-group"><label>头像图片 (压缩至128px高清)</label><div class="paste-area" id="pasteArea" tabindex="0"><span id="pasteHint">📋 点击粘贴图片，自动压缩</span><img id="pastePreview" style="display:none;"></div></div>
+                <div class="form-group"><label>稀有度</label><div class="star-selector" id="starSelector">${[1,2,3,4,5,6].map(s => `<span data-star="${s}">★</span>`).join('')}</div></div>
+                <div class="form-group"><label>收集状态</label><div class="tag-selector" id="addTagSelector"><span class="tag-option" data-tag="未收集">未收集</span><span class="tag-option" data-tag="已收集">已收集</span></div></div>
+                <div class="form-group"><label>职业</label><div class="tag-selector" id="classSelector">${CLASS_OPTIONS.map(c => `<span class="tag-option" data-class="${c}">${c}</span>`).join('')}</div></div>
+                <div class="form-group"><label>📋 批量导入</label><textarea id="batchText" rows="4" placeholder="每行: 名称 职业 星级 状态"></textarea><button class="btn secondary" id="batchImportBtn">解析预览</button><div id="batchPreview" class="batch-result" style="display:none;"></div><button class="btn" id="confirmBatchBtn" style="display:none;">确认导入</button></div>
+                <button class="btn" id="saveRoleBtn">保存角色</button>
+            </div>
+            <div class="bottom-nav"><div class="nav-item" data-view="home">🏠 收集册</div><div class="nav-item active">➕ 添加</div><div class="nav-item" data-view="tags">🏷️ 标签</div></div>`;
+                let selectedStars = 1, pastedImageData = null, selectedTag = '未收集', selectedClass = '';
+                let pendingBatch = [];
+                const starSpans = document.querySelectorAll('#starSelector span');
+                starSpans.forEach((s,i) => s.classList.toggle('active', i < selectedStars));
+                starSpans.forEach(s => s.addEventListener('click', (e) => {
+                    selectedStars = parseInt(e.target.dataset.star);
+                    starSpans.forEach((sp, idx) => sp.classList.toggle('active', idx < selectedStars));
+                }));
+                const tagOpts = document.querySelectorAll('#addTagSelector .tag-option');
+                tagOpts.forEach(o => o.classList.toggle('selected', o.dataset.tag === selectedTag));
+                tagOpts.forEach(o => o.addEventListener('click', () => {
+                    selectedTag = o.dataset.tag;
+                    tagOpts.forEach(t => t.classList.toggle('selected', t.dataset.tag === selectedTag));
+                }));
+                const classOpts = document.querySelectorAll('#classSelector .tag-option');
+                classOpts.forEach(o => o.classList.toggle('selected', o.dataset.class === selectedClass));
+                classOpts.forEach(o => o.addEventListener('click', () => {
+                    selectedClass = o.dataset.class;
+                    classOpts.forEach(c => c.classList.toggle('selected', c.dataset.class === selectedClass));
+                }));
+                const pasteArea = document.getElementById('pasteArea'), pasteHint = document.getElementById('pasteHint'), pastePreview = document.getElementById('pastePreview');
+                pasteArea.addEventListener('click', () => pasteArea.focus());
+                pasteArea.addEventListener('paste', async (e) => {
+                    const items = e.clipboardData?.items;
+                    for(let item of items) {
+                        if(item.type.match(/^image\//)) {
+                            e.preventDefault();
+                            const blob = item.getAsFile();
+                            try {
+                                const compressed = await compressImage(blob);
+                                pastedImageData = compressed;
+                                pastePreview.src = compressed;
+                                pastePreview.style.display = 'block';
+                                pasteHint.style.display = 'none';
+                                pasteArea.classList.add('filled');
+                            } catch(err) { alert('压缩失败'); }
+                            break;
+                        }
+                    }
+                });
+                document.getElementById('batchImportBtn').addEventListener('click', () => {
+                    const text = document.getElementById('batchText').value;
+                    if(!text.trim()) return;
+                    pendingBatch = parseBatchText(text);
+                    document.getElementById('batchPreview').style.display = 'block';
+                    document.getElementById('batchPreview').innerHTML = pendingBatch.map(r => `${r.name} | ${r.props.职业||'无'} | ★${r.stars} | ${r.tags[0]}`).join('\n');
+                    document.getElementById('confirmBatchBtn').style.display = 'block';
+                });
+                document.getElementById('confirmBatchBtn').addEventListener('click', () => {
+                    if(!pendingBatch.length) return;
+                    appData.roles.push(...pendingBatch);
+                    if(saveData()) alert(`成功添加 ${pendingBatch.length} 个角色`);
+                    else alert("保存失败");
+                    document.getElementById('batchText').value = '';
+                    document.getElementById('batchPreview').style.display = 'none';
+                    document.getElementById('confirmBatchBtn').style.display = 'none';
+                    pendingBatch = [];
+                    currentView = 'home'; render();
+                });
+                document.getElementById('backToHomeBtn').addEventListener('click', () => goBackToHome());
+                document.getElementById('saveRoleBtn').addEventListener('click', () => {
+                    const name = document.getElementById('roleNameInput').value.trim();
+                    if(!name) { alert("请输入角色名称"); return; }
+                    const props = {}; if(selectedClass) props['职业'] = selectedClass;
+                    const genderRadio = document.querySelector('input[name="gender"]:checked');
+                    const newRole = {
+                        id: genId(), name, image: pastedImageData || '', tags: [selectedTag], stars: selectedStars, props,
+                        notes: '', level: '', skillLevel: '', module: '',
+                        levelGraduated: false, skillGraduated: false, moduleGraduated: false,
+                        gender: genderRadio ? genderRadio.value : '', releaseDate: document.getElementById('releaseDateInput').value
+                    };
+                    appData.roles.push(newRole);
+                    if(saveData()) { currentView = 'home'; render(); }
+                    else alert("保存失败");
+                });
+                document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', (e) => {
+                    const v = i.dataset.view; if(v==='home') currentView='home'; else if(v==='tags') currentView='tags'; render();
+                }));
+            }
+
+            // ========== 标签管理页面 ==========
+            function renderTagsPage(container) {
+                container.innerHTML = `<div class="header"><h1 class="art-title">明日方舟</h1><button class="btn secondary" id="backFromTagsBtn">← 返回</button></div><div class="main-content" style="max-width:600px;margin:0 auto"><p>勾选"计入收集"的标签代表已收集。</p><div id="tagsList"></div><div class="form-group" style="margin-top:24px;"><input id="newTagNameInput" placeholder="新标签名称"><input type="color" id="newTagColorInput" value="#9E9E9E" style="width:100%;margin-top:10px;"><button class="btn" id="addTagBtn">添加标签</button></div></div><div class="bottom-nav"><div class="nav-item" data-view="home">🏠 收集册</div><div class="nav-item" data-view="add">➕ 添加</div><div class="nav-item active">🏷️ 标签</div></div>`;
+                function renderList() {
+                    const list = document.getElementById('tagsList');
+                    list.innerHTML = appData.tags.map(t => `<div style="display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid #f0f0f0;"><span style="background:${t.color};width:24px;height:24px;border-radius:50%;"></span><input value="${t.name.replace(/"/g,'&quot;')}" data-tagid="${t.id}" class="tag-name-input" style="flex:1;"><label><input type="checkbox" ${t.countAsCollected?'checked':''} data-tagid="${t.id}" class="collect-checkbox"> 计入收集</label><button data-tagid="${t.id}" class="delete-tag-btn">🗑️</button></div>`).join('');
+                    document.querySelectorAll('.tag-name-input').forEach(i => i.addEventListener('change', (e) => { const tag = appData.tags.find(t => t.id === i.dataset.tagid); if(tag) { const old = tag.name; tag.name = i.value.trim()||old; appData.roles.forEach(r => { const idx = r.tags.indexOf(old); if(idx!==-1) r.tags[idx]=tag.name; }); saveData(); renderList(); } }));
+                    document.querySelectorAll('.collect-checkbox').forEach(c => c.addEventListener('change', (e) => { const tag = appData.tags.find(t => t.id === c.dataset.tagid); if(tag) { tag.countAsCollected = c.checked; saveData(); } }));
+                    document.querySelectorAll('.delete-tag-btn').forEach(b => b.addEventListener('click', () => { const tag = appData.tags.find(t => t.id === b.dataset.tagid); if(tag && confirm(`删除标签"${tag.name}"？`)) { appData.roles.forEach(r => r.tags = r.tags.filter(tn => tn !== tag.name)); appData.tags = appData.tags.filter(t => t.id !== tag.id); saveData(); renderList(); } }));
+                }
+                renderList();
+                document.getElementById('addTagBtn').addEventListener('click', () => { const n = document.getElementById('newTagNameInput').value.trim(); if(!n) return; if(appData.tags.some(t => t.name === n)) return alert('标签已存在'); appData.tags.push({ id: genId(), name: n, color: document.getElementById('newTagColorInput').value, countAsCollected: false }); saveData(); document.getElementById('newTagNameInput').value=''; renderList(); });
+                document.getElementById('backFromTagsBtn').addEventListener('click', () => goBackToHome());
+                document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', (e) => { const v = i.dataset.view; if(v==='home') currentView='home'; else if(v==='add') { currentView='add'; editingRoleId=null; } render(); }));
+            }
+
+            // ========== 详情页面 ==========
+            function renderDetailPage(container) {
+                const role = appData.roles.find(r => r.id === editingRoleId);
+                if (!role) { currentView = 'home'; render(); return; }
+                const total = detailNavList.length, pos = detailCurrentIdx+1;
+                const hasPrev = detailCurrentIdx > 0, hasNext = detailCurrentIdx < total-1;
+                container.innerHTML = `
+            <div class="header"><div style="display:flex;align-items:center;gap:12px;"><button class="nav-arrow ${!hasPrev?'disabled':''}" id="detailPrevBtn">◀</button><h1 class="art-title" style="font-size:1.5rem;">角色详情</h1><button class="nav-arrow ${!hasNext?'disabled':''}" id="detailNextBtn">▶</button></div><div style="display:flex;gap:12px;"><span class="role-counter">${pos}/${total}</span><button class="btn secondary" id="backFromDetailBtn" style="padding:8px 16px;">← 返回</button></div></div>
+            <div class="main-content" style="max-width:600px;margin:0 auto;">
+                <div class="form-group"><label>头像图片 (自动压缩)</label><div class="paste-area" id="editPasteArea" tabindex="0">${role.image ? `<img src="${role.image.replace(/"/g,'&quot;')}" id="editPastePreview" style="display:block;max-width:120px;margin:8px auto;">` : ''}<span id="editPasteHint" style="${role.image?'display:none':''}">📋 粘贴新图(自动压缩)</span></div></div>
+                <div class="form-group"><label>角色名称</label><input id="editName" value="${escapeHtml(role.name)}"></div>
+                <div class="form-group"><label>性别</label><div class="gender-group"><label><input type="radio" name="editGender" value="男" ${role.gender==='男'?'checked':''}> 男</label><label><input type="radio" name="editGender" value="女" ${role.gender==='女'?'checked':''}> 女</label><label><input type="radio" name="editGender" value="" ${!role.gender?'checked':''}> 未知</label></div></div>
+                <div class="form-group"><label>实装日期</label><input id="editReleaseDate" type="date" value="${role.releaseDate||''}"></div>
+                <div class="form-group"><label>稀有度</label><div class="star-selector" id="editStarSelector">${[1,2,3,4,5,6].map(s => `<span data-star="${s}" class="${(role.stars||1)>=s?'active':''}">★</span>`).join('')}</div></div>
+                <div class="form-group"><label>收集状态</label><div class="tag-selector" id="editTagSelector"><span class="tag-option ${role.tags[0]==='未收集'?'selected':''}" data-tag="未收集">未收集</span><span class="tag-option ${role.tags[0]==='已收集'?'selected':''}" data-tag="已收集">已收集</span></div></div>
+                <div class="edit-row ${role.levelGraduated?'graduated-row':''}"><label>等级</label><input id="editLevel" value="${escapeHtml(role.level)}"><button class="graduate-btn ${role.levelGraduated?'graduated':''}" id="levelGraduateBtn">${role.levelGraduated?'已毕业':'毕业'}</button></div>
+                <div class="edit-row ${role.skillGraduated?'graduated-row':''}"><label>技能等级</label><input id="editSkillLevel" value="${escapeHtml(role.skillLevel)}"><button class="graduate-btn ${role.skillGraduated?'graduated':''}" id="skillGraduateBtn">${role.skillGraduated?'已毕业':'毕业'}</button></div>
+                <div class="edit-row ${role.moduleGraduated?'graduated-row':''}"><label>模组</label><input id="editModule" value="${escapeHtml(role.module)}"><button class="graduate-btn ${role.moduleGraduated?'graduated':''}" id="moduleGraduateBtn">${role.moduleGraduated?'已毕业':'毕业'}</button></div>
+                <button class="btn" id="saveEditBtn">保存修改</button>
+                <button class="btn secondary" id="deleteRoleBtn" style="margin-top:10px;background:#ffebee;color:#c62828;">删除角色</button>
+            </div>`;
+                let newImgData = null;
+                window._detailNewImageData = null;
+                const pasteArea = document.getElementById('editPasteArea'), pasteHint = document.getElementById('editPasteHint');
+                let preview = document.getElementById('editPastePreview');
+                if(!preview) { preview = document.createElement('img'); preview.id='editPastePreview'; preview.style.display='none'; pasteArea.appendChild(preview); }
+                pasteArea.addEventListener('click',()=>pasteArea.focus());
+                pasteArea.addEventListener('paste', async (e) => {
+                    const items = e.clipboardData?.items;
+                    for(let item of items) {
+                        if(item.type.match(/^image\//)) {
+                            e.preventDefault();
+                            const blob = item.getAsFile();
+                            try {
+                                const compressed = await compressImage(blob);
+                                newImgData = compressed;
+                                window._detailNewImageData = compressed;
+                                preview.src = compressed;
+                                preview.style.display='block';
+                                if(pasteHint) pasteHint.style.display='none';
+                                pasteArea.classList.add('filled');
+                            } catch(err) { alert('压缩失败'); }
+                            break;
+                        }
+                    }
+                });
+                let selectedStatus = role.tags[0] || '未收集';
+                const tagOpts = document.querySelectorAll('#editTagSelector .tag-option');
+                tagOpts.forEach(o => o.classList.toggle('selected', o.dataset.tag === selectedStatus));
+                tagOpts.forEach(o => o.addEventListener('click', () => {
+                    selectedStatus = o.dataset.tag;
+                    tagOpts.forEach(t => t.classList.toggle('selected', t.dataset.tag === selectedStatus));
+                }));
+                let editStars = role.stars;
+                const starSpans = document.querySelectorAll('#editStarSelector span');
+                starSpans.forEach((s,i) => s.classList.toggle('active', i < editStars));
+                starSpans.forEach(s => s.addEventListener('click', (e) => {
+                    editStars = parseInt(e.target.dataset.star);
+                    starSpans.forEach((sp, idx) => sp.classList.toggle('active', idx < editStars));
+                }));
+                let levelGrad = role.levelGraduated, skillGrad = role.skillGraduated, moduleGrad = role.moduleGraduated;
+                const levelBtn = document.getElementById('levelGraduateBtn'), skillBtn = document.getElementById('skillGraduateBtn'), moduleBtn = document.getElementById('moduleGraduateBtn');
+                const autoUpdate = () => { if(levelGrad && skillGrad && moduleGrad && selectedStatus !== '已收集') { selectedStatus = '已收集'; tagOpts.forEach(t => t.classList.toggle('selected', t.dataset.tag === selectedStatus)); } };
+                levelBtn.addEventListener('click', () => { levelGrad = !levelGrad; levelBtn.closest('.edit-row').classList.toggle('graduated-row', levelGrad); levelBtn.classList.toggle('graduated', levelGrad); levelBtn.textContent = levelGrad ? '已毕业' : '毕业'; autoUpdate(); });
+                skillBtn.addEventListener('click', () => { skillGrad = !skillGrad; skillBtn.closest('.edit-row').classList.toggle('graduated-row', skillGrad); skillBtn.classList.toggle('graduated', skillGrad); skillBtn.textContent = skillGrad ? '已毕业' : '毕业'; autoUpdate(); });
+                moduleBtn.addEventListener('click', () => { moduleGrad = !moduleGrad; moduleBtn.closest('.edit-row').classList.toggle('graduated-row', moduleGrad); moduleBtn.classList.toggle('graduated', moduleGrad); moduleBtn.textContent = moduleGrad ? '已毕业' : '毕业'; autoUpdate(); });
+                document.getElementById('saveEditBtn').addEventListener('click', () => { if(saveCurrentDetailChanges()) { currentView = 'home'; render(); } else alert("保存失败"); });
+                document.getElementById('deleteRoleBtn').addEventListener('click', () => { if(confirm('永久删除该角色？')) { appData.roles = appData.roles.filter(r => r.id !== editingRoleId); if(saveData()) { currentView = 'home'; render(); } else alert("删除失败"); } });
+                document.getElementById('backFromDetailBtn').addEventListener('click', () => goBackToHome());
+                document.getElementById('detailPrevBtn').addEventListener('click', () => { if(hasPrev) navigateToDetailByOffset(-1); });
+                document.getElementById('detailNextBtn').addEventListener('click', () => { if(hasNext) navigateToDetailByOffset(1); });
+            }
+
+            setTimeout(() => { recompressAllImages(false).catch(console.warn); }, 500);
+            render();
+        })();
+    </script>
+</body>
+</html>
