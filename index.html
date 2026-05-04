@@ -33,23 +33,33 @@
         .search-input{width:100%;padding:12px 18px;border-radius:40px;border:1px solid #e0e0e0;background:#fafafa;font-size:0.95rem;outline:none}
         .search-input:focus{border-color:#2196F3;background:#fff;box-shadow:0 0 0 2px rgba(33,150,243,0.1)}
         .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;padding-bottom:24px}
-        .card{background:#fafafa;border-radius:18px;padding:12px 16px 16px;box-shadow:0 4px 8px rgba(0,0,0,0.03);cursor:pointer;position:relative;border:1px solid #f0f0f0;display:flex;flex-direction:column;align-items:center;text-align:center;transition:transform 0.1s}
+        .card{background:#fafafa;border-radius:18px;padding:12px 16px 16px;box-shadow:0 4px 8px rgba(0,0,0,0.03);cursor:pointer;position:relative;border:2px solid #f0f0f0;display:flex;flex-direction:column;align-items:center;text-align:center;transition:transform 0.1s, box-shadow 0.1s}
         .card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.06)}
         .card:active{transform:scale(0.97)}
         .card.graduated-card{background:#fff9e6;box-shadow:0 4px 12px rgba(255,193,7,0.15);border-color:#ffe082}
-        .card-checkbox-wrapper{width:100%;display:flex;justify-content:center;margin-bottom:8px}
-        .card-select-checkbox{transform:scale(1.4);cursor:pointer;accent-color:#2196F3}
+        /* 培养中火焰卡片 */
+        .card.training-card {
+            background:linear-gradient(180deg, #fff5f0 0%, #fff 60%);
+            border:2px solid #FF6B35;
+            box-shadow:0 0 20px rgba(255,107,53,0.25), inset 0 0 10px rgba(255,140,0,0.06);
+            animation: flameGlow 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes flameGlow {
+            0% { box-shadow:0 0 20px rgba(255,107,53,0.25), inset 0 0 10px rgba(255,140,0,0.06); border-color:#FF6B35; }
+            100% { box-shadow:0 0 30px rgba(255,60,0,0.4), inset 0 0 16px rgba(255,100,0,0.12); border-color:#FF4500; }
+        }
+        .training-badge{position:absolute;top:6px;right:6px;font-size:1.4rem;z-index:5;background:rgba(255,255,255,0.9);border-radius:14px;padding:2px 6px;line-height:1;box-shadow:0 1px 4px rgba(255,100,0,0.3);animation:badgePulse 0.8s ease-in-out infinite alternate}
+        @keyframes badgePulse {
+            0% { transform:scale(1); }
+            100% { transform:scale(1.15); }
+        }
         .avatar-container{position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
         .profession-tag-vertical{position:absolute;left:-28px;top:50%;transform:translateY(-50%);background:#607D8B;color:#fff;font-size:0.7rem;font-weight:600;padding:4px 4px;border-radius:10px;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:1px;box-shadow:0 2px 4px rgba(0,0,0,0.1);z-index:2;white-space:nowrap;line-height:1.2}
         .avatar{width:90px;height:90px;background:#ffffff;border-radius:50%;background-size:cover;background-position:center;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.08);position:relative;z-index:1}
         .card .name{font-weight:600;font-size:1rem;color:#1e1e1e;margin-bottom:4px;word-break:break-word}
         .stars{color:#FFB300;font-size:1.6rem;letter-spacing:3px;text-shadow:0 1px 2px rgba(0,0,0,0.1);margin-bottom:2px;line-height:1.2}
-        .status-dot{position:absolute;top:30px;right:12px;width:16px;height:16px;border-radius:50%;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+        .status-dot{position:absolute;top:6px;left:6px;width:16px;height:16px;border-radius:50%;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
         .empty-state{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#aaa;font-size:1.1rem;padding:40px 0}
-        .batch-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
-        .btn.danger{background:#f44336;color:white}
-        .btn.danger:hover{background:#d32f2f}
-        .btn.danger:disabled{background:#ccc;cursor:not-allowed}
         .bottom-nav{display:flex;border-top:1px solid #eee;background:#fff;position:sticky;bottom:0;z-index:10;padding:0 32px}
         .nav-item{flex:1;text-align:center;padding:16px 8px;font-size:0.95rem;color:#888;font-weight:500;cursor:pointer;transition:color 0.2s}
         .nav-item:hover{color:#2196F3}
@@ -95,6 +105,10 @@
         .role-counter{font-size:0.85rem;background:#f5f5f5;padding:4px 12px;border-radius:24px;color:#555}
         .compress-canvas{position:fixed;left:-9999px;top:-9999px;width:128px;height:128px}
         .storage-info-bar{text-align:center;font-size:0.78rem;color:#555;padding:4px 0 10px 0;letter-spacing:0.3px;background:#f8f9fa;border-radius:20px;margin-bottom:8px}
+        /* 培养中复选框加大 */
+        .training-checkbox-label{display:flex;align-items:center;gap:12px;font-size:1.1rem;font-weight:700;color:#FF6B35;cursor:pointer;padding:10px 16px;background:#fff5f0;border-radius:14px;border:2px dashed #FF6B35;transition:all 0.2s}
+        .training-checkbox-label:hover{background:#ffede0;border-color:#FF4500}
+        .training-checkbox-label input[type="checkbox"]{width:28px;height:28px;accent-color:#FF6B35;transform:scale(1.3);cursor:pointer}
     </style>
 </head>
 <body>
@@ -125,13 +139,12 @@
             if (r.moduleGraduated === undefined) r.moduleGraduated = false;
             if (r.gender === undefined) r.gender = '';
             if (r.releaseDate === undefined) r.releaseDate = '';
+            if (r.inTraining === undefined) r.inTraining = false;
         });
 
         const COMPRESS_SIZE = 128;
         const COMPRESS_QUALITY = 0.7;
-        let selectedRoleIds = new Set();
 
-        // 修复压缩函数：先铺白色背景，避免透明区域变黑
         async function compressImage(blobOrDataUrl) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
@@ -153,10 +166,8 @@
                     canvas.width = width;
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
-                    // 先画白色背景
                     ctx.fillStyle = '#ffffff';
                     ctx.fillRect(0, 0, width, height);
-                    // 再画图片
                     ctx.drawImage(img, 0, 0, width, height);
                     resolve(canvas.toDataURL('image/jpeg', COMPRESS_QUALITY));
                 };
@@ -172,19 +183,12 @@
                 if (role.image && role.image.startsWith('data:image')) {
                     try {
                         const compressed = await compressImage(role.image);
-                        if (compressed !== role.image) {
-                            role.image = compressed;
-                            changed = true;
-                        }
+                        if (compressed !== role.image) { role.image = compressed; changed = true; }
                         if (showProgress && i % 10 === 0) await new Promise(r => setTimeout(r, 10));
                     } catch (e) { console.warn('压缩失败', role.name, e); }
                 }
             }
-            if (changed) {
-                saveData(true);
-                if (showProgress) alert('所有图片已重新压缩为高清版。');
-                render();
-            }
+            if (changed) { saveData(true); if (showProgress) alert('所有图片已重新压缩为高清版。'); render(); }
         }
 
         function getStorageUsage() {
@@ -201,9 +205,7 @@
             const used = getStorageUsage();
             const usedMB = (used / 1024 / 1024).toFixed(2);
             const panel = document.getElementById('storageInfoPanel');
-            if (panel) {
-                panel.innerHTML = `💾 已用 ${usedMB} MB`;
-            }
+            if (panel) panel.innerHTML = `💾 已用 ${usedMB} MB`;
         }
 
         function saveData(skipCheck = false) {
@@ -236,9 +238,7 @@
         let detailNavList = [];
         let detailCurrentIdx = -1;
 
-        function isFullyGraduated(role) {
-            return role.levelGraduated && role.skillGraduated && role.moduleGraduated;
-        }
+        function isFullyGraduated(role) { return role.levelGraduated && role.skillGraduated && role.moduleGraduated; }
 
         function isHalfGreat(role) {
             const count = (role.levelGraduated ? 1 : 0) + (role.skillGraduated ? 1 : 0) + (role.moduleGraduated ? 1 : 0);
@@ -248,7 +248,10 @@
         function sortRoles(roles) {
             if (sortMode === 'release_asc') return [...roles].sort((a,b) => (a.releaseDate||'').localeCompare(b.releaseDate||''));
             if (sortMode === 'release_desc') return [...roles].sort((a,b) => (b.releaseDate||'').localeCompare(a.releaseDate||''));
+            // 智能排序：培养中 > 大圆满 > 星级
             return [...roles].sort((a,b) => {
+                if (a.inTraining && !b.inTraining) return -1;
+                if (!a.inTraining && b.inTraining) return 1;
                 const aGrad = isFullyGraduated(a) ? 1 : 0;
                 const bGrad = isFullyGraduated(b) ? 1 : 0;
                 if (aGrad !== bGrad) return aGrad - bGrad;
@@ -262,6 +265,7 @@
             else if (primaryFilter === '已收集') filtered = filtered.filter(r => r.tags && r.tags.includes('已收集') && !isFullyGraduated(r));
             else if (primaryFilter === '半步大圆满') filtered = filtered.filter(r => isHalfGreat(r));
             else if (primaryFilter === '大圆满') filtered = filtered.filter(r => isFullyGraduated(r));
+            else if (primaryFilter === '培养中') filtered = filtered.filter(r => r.inTraining);
             if (secondaryFilter) filtered = filtered.filter(r => r.props && r.props.职业 === secondaryFilter);
             if (homeSearchKeyword.trim()) {
                 const kw = homeSearchKeyword.trim().toLowerCase();
@@ -275,10 +279,7 @@
             const list = getFilteredRoleList();
             detailNavList = list.map(r => r.id);
             detailCurrentIdx = detailNavList.findIndex(id => id === currentRoleId);
-            if (detailCurrentIdx === -1 && detailNavList.length) {
-                detailCurrentIdx = 0;
-                editingRoleId = detailNavList[0];
-            }
+            if (detailCurrentIdx === -1 && detailNavList.length) { detailCurrentIdx = 0; editingRoleId = detailNavList[0]; }
         }
 
         function saveCurrentDetailChanges() {
@@ -298,6 +299,7 @@
                 const tagOptions = document.querySelectorAll('#editTagSelector .tag-option.selected');
                 const genderRadio = document.querySelector('input[name="editGender"]:checked');
                 const releaseDateInput = document.getElementById('editReleaseDate');
+                const trainingCheckbox = document.getElementById('trainingCheckbox');
 
                 let selectedStars = starSpans.length || role.stars;
                 let levelGraduated = levelBtn ? levelBtn.classList.contains('graduated') : role.levelGraduated;
@@ -305,10 +307,7 @@
                 let moduleGraduated = moduleBtn ? moduleBtn.classList.contains('graduated') : role.moduleGraduated;
                 let selectedStatus = tagOptions.length ? tagOptions[0].dataset.tag : (role.tags[0] || '未收集');
 
-                if (window._detailNewImageData) {
-                    role.image = window._detailNewImageData;
-                    window._detailNewImageData = null;
-                }
+                if (window._detailNewImageData) { role.image = window._detailNewImageData; window._detailNewImageData = null; }
 
                 role.name = nameInput.value.trim() || role.name;
                 role.stars = selectedStars;
@@ -320,6 +319,18 @@
                 role.moduleGraduated = moduleGraduated;
                 role.gender = genderRadio ? genderRadio.value : '';
                 role.releaseDate = releaseDateInput ? releaseDateInput.value : '';
+
+                if (trainingCheckbox) {
+                    if (trainingCheckbox.checked && !role.inTraining) {
+                        const currentTrainingCount = appData.roles.filter(r => r.id !== editingRoleId && r.inTraining).length;
+                        if (currentTrainingCount >= 3) {
+                            alert('培养中角色已达上限（最多3个），无法再添加。');
+                            trainingCheckbox.checked = false;
+                            return false;
+                        }
+                    }
+                    role.inTraining = trainingCheckbox.checked;
+                }
 
                 if (isFullyGraduated(role)) role.tags = ['已收集'];
                 else role.tags = [selectedStatus];
@@ -341,9 +352,7 @@
             render();
         }
 
-        function goBackToHome() {
-            if (currentView !== 'home') { currentView = 'home'; editingRoleId = null; render(); }
-        }
+        function goBackToHome() { if (currentView !== 'home') { currentView = 'home'; editingRoleId = null; render(); } }
 
         function parseBatchText(text) {
             const lines = text.split('\n').filter(l => l.trim());
@@ -361,13 +370,7 @@
                     props[`属性${i}`] = w;
                 }
                 if (!tags.length) tags = ['未收集'];
-                results.push({
-                    id: genId(), name, image: '', tags, stars,
-                    props: profession ? { 职业: profession, ...props } : props,
-                    notes: '', level: '', skillLevel: '', module: '',
-                    levelGraduated: false, skillGraduated: false, moduleGraduated: false,
-                    gender: '', releaseDate: ''
-                });
+                results.push({ id: genId(), name, image: '', tags, stars, props: profession ? { 职业: profession, ...props } : props, notes: '', level: '', skillLevel: '', module: '', levelGraduated: false, skillGraduated: false, moduleGraduated: false, gender: '', releaseDate: '', inTraining: false });
             }
             return results;
         }
@@ -398,20 +401,16 @@
                             <button class="filter-chip" data-filter="已收集">已收集</button>
                             <button class="filter-chip" data-filter="半步大圆满">半步大圆满</button>
                             <button class="filter-chip" data-filter="大圆满">大圆满</button>
+                            <button class="filter-chip" data-filter="培养中">培养中</button>
                             <button class="filter-chip active" data-filter="all">全部</button>
                         </div>
                         <div class="adv-filter-toggle" id="advFilterToggle">⚙️ 高级筛选 ▼</div>
                     </div>
                     <div class="adv-filter-panel" id="advFilterPanel">
                         <div class="adv-filter-group"><label>性别：</label><div class="adv-radio-group"><span><input type="radio" name="genderFilter" value="all" ${genderFilter==='all'?'checked':''}> 全部</span><span><input type="radio" name="genderFilter" value="男" ${genderFilter==='男'?'checked':''}> 男</span><span><input type="radio" name="genderFilter" value="女" ${genderFilter==='女'?'checked':''}> 女</span></div></div>
-                        <div class="adv-filter-group"><label>排序方式：</label><select id="sortModeSelect" class="sort-select"><option value="smart" ${sortMode==='smart'?'selected':''}>智能排序(大圆满+星级)</option><option value="release_asc" ${sortMode==='release_asc'?'selected':''}>实装正序(旧→新)</option><option value="release_desc" ${sortMode==='release_desc'?'selected':''}>实装倒序(新→旧)</option></select></div>
+                        <div class="adv-filter-group"><label>排序方式：</label><select id="sortModeSelect" class="sort-select"><option value="smart" ${sortMode==='smart'?'selected':''}>智能排序(培养中优先)</option><option value="release_asc" ${sortMode==='release_asc'?'selected':''}>实装正序(旧→新)</option><option value="release_desc" ${sortMode==='release_desc'?'selected':''}>实装倒序(新→旧)</option></select></div>
                     </div>
                     <div class="class-filter-bar" id="classFilterBar">${CLASS_OPTIONS.map(c => `<button class="class-filter-chip" data-class="${c}">${c}</button>`).join('')}</div>
-                </div>
-                <div class="batch-actions" id="batchActions">
-                    <button class="btn small secondary" id="selectAllBtn">✅ 全选当前</button>
-                    <button class="btn small secondary" id="deselectAllBtn">⬜ 取消全选</button>
-                    <button class="btn small danger" id="deleteSelectedBtn" disabled>🗑️ 删除所选 (<span id="selectedCount">0</span>)</button>
                 </div>
                 <div id="roleGridContainer">${renderRoleGrid()}</div>
                 <div class="sync-buttons"><button class="btn secondary small" id="exportBtn">📤 导出备份</button><button class="btn secondary small" id="importBtn">📥 导入恢复</button></div>
@@ -425,14 +424,15 @@
             if (!filtered.length) return `<div class="empty-state">✨ 暂无角色<br>点击下方 + 添加</div>`;
             return `<div class="grid">${filtered.map(role => {
                 const fullyGrad = isFullyGraduated(role);
+                const halfGreat = isHalfGreat(role);
                 const has = role.tags && role.tags.some(tn => appData.tags.some(t => t.name === tn && t.countAsCollected));
-                const dot = has ? '#4CAF50' : '#ccc';
+                const dot = halfGreat ? '#FF9800' : (has ? '#4CAF50' : '#ccc');
                 const avatarStyle = role.image ? `background-image:url('${role.image.replace(/'/g, "\\'")}')` : '';
                 const profession = role.props && role.props.职业 || '';
-                return `<div class="card ${fullyGrad ? 'graduated-card' : ''}" data-role-id="${role.id}">
-                    <div class="card-checkbox-wrapper">
-                        <input type="checkbox" class="card-select-checkbox" data-role-id="${role.id}" ${selectedRoleIds.has(role.id) ? 'checked' : ''}>
-                    </div>
+                const trainingIcon = role.inTraining ? `<span class="training-badge">🔥</span>` : '';
+                const cardClass = role.inTraining ? 'training-card' : (fullyGrad ? 'graduated-card' : '');
+                return `<div class="card ${cardClass}" data-role-id="${role.id}">
+                    ${trainingIcon}
                     <div class="status-dot" style="background:${dot}"></div>
                     <div class="avatar-container">
                         ${profession ? `<div class="profession-tag-vertical">${profession}</div>` : ''}
@@ -446,125 +446,38 @@
 
         function getStarString(s) { return '★'.repeat(s); }
 
-        function updateBatchUI() {
-            const deleteBtn = document.getElementById('deleteSelectedBtn');
-            const countSpan = document.getElementById('selectedCount');
-            if (deleteBtn && countSpan) {
-                countSpan.textContent = selectedRoleIds.size;
-                deleteBtn.disabled = selectedRoleIds.size === 0;
-            }
-        }
-
         function updateFilterUI() {
             document.querySelectorAll('#primaryFilterBar .filter-chip').forEach(btn => btn.classList.toggle('active', btn.dataset.filter === primaryFilter));
             document.querySelectorAll('#classFilterBar .class-filter-chip').forEach(btn => btn.classList.toggle('active', btn.dataset.class === secondaryFilter));
             document.getElementById('roleGridContainer').innerHTML = renderRoleGrid();
             attachCardClicks();
-            attachCheckboxEvents();
-            updateBatchUI();
-        }
-
-        function attachCheckboxEvents() {
-            document.querySelectorAll('.card-select-checkbox').forEach(cb => {
-                cb.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const roleId = cb.dataset.roleId;
-                    if (cb.checked) selectedRoleIds.add(roleId);
-                    else selectedRoleIds.delete(roleId);
-                    updateBatchUI();
-                });
-            });
         }
 
         function attachHomeEvents() {
-            document.querySelectorAll('#primaryFilterBar .filter-chip').forEach(btn => btn.addEventListener('click', () => {
-                primaryFilter = btn.dataset.filter; secondaryFilter = ''; updateFilterUI();
-            }));
-            document.querySelectorAll('#classFilterBar .class-filter-chip').forEach(btn => btn.addEventListener('click', () => {
-                const c = btn.dataset.class; secondaryFilter = (secondaryFilter === c) ? '' : c; updateFilterUI();
-            }));
+            document.querySelectorAll('#primaryFilterBar .filter-chip').forEach(btn => btn.addEventListener('click', () => { primaryFilter = btn.dataset.filter; secondaryFilter = ''; updateFilterUI(); }));
+            document.querySelectorAll('#classFilterBar .class-filter-chip').forEach(btn => btn.addEventListener('click', () => { const c = btn.dataset.class; secondaryFilter = (secondaryFilter === c) ? '' : c; updateFilterUI(); }));
             const searchInput = document.getElementById('searchRoleInput');
             if(searchInput) searchInput.addEventListener('input', (e) => { homeSearchKeyword = e.target.value; updateFilterUI(); });
-
             const toggle = document.getElementById('advFilterToggle'), panel = document.getElementById('advFilterPanel');
             if(toggle && panel) {
                 if(advPanelOpen) panel.classList.add('open');
-                toggle.addEventListener('click', () => {
-                    advPanelOpen = !advPanelOpen; panel.classList.toggle('open', advPanelOpen);
-                    toggle.innerHTML = advPanelOpen ? '⚙️ 高级筛选 ▲' : '⚙️ 高级筛选 ▼';
-                });
+                toggle.addEventListener('click', () => { advPanelOpen = !advPanelOpen; panel.classList.toggle('open', advPanelOpen); toggle.innerHTML = advPanelOpen ? '⚙️ 高级筛选 ▲' : '⚙️ 高级筛选 ▼'; });
                 document.querySelectorAll('input[name="genderFilter"]').forEach(r => r.addEventListener('change', (e) => { genderFilter = e.target.value; updateFilterUI(); }));
                 const sortSelect = document.getElementById('sortModeSelect');
                 if(sortSelect) sortSelect.addEventListener('change', (e) => { sortMode = e.target.value; updateFilterUI(); });
             }
-
             attachCardClicks();
-            attachCheckboxEvents();
-
-            document.getElementById('selectAllBtn').addEventListener('click', () => {
-                getFilteredRoleList().forEach(r => selectedRoleIds.add(r.id));
-                updateFilterUI();
-            });
-            document.getElementById('deselectAllBtn').addEventListener('click', () => {
-                selectedRoleIds.clear(); updateFilterUI();
-            });
-            document.getElementById('deleteSelectedBtn').addEventListener('click', () => {
-                if(selectedRoleIds.size === 0) return;
-                if(confirm(`确定要永久删除选中的 ${selectedRoleIds.size} 个角色吗？`)) {
-                    appData.roles = appData.roles.filter(r => !selectedRoleIds.has(r.id));
-                    selectedRoleIds.clear();
-                    if(saveData()) updateFilterUI(); else alert("删除失败");
-                }
-            });
-
-            document.getElementById('exportBtn').addEventListener('click', () => {
-                const dataStr = JSON.stringify(appData);
-                const blob = new Blob([dataStr], {type:'application/json'});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a'); a.href = url;
-                a.download = `收藏册_${new Date().toISOString().slice(0,10)}.json`; a.click();
-                URL.revokeObjectURL(url);
-            });
-            document.getElementById('importBtn').addEventListener('click', () => {
-                const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';
-                inp.onchange = (e) => {
-                    const file = e.target.files[0]; if(!file) return;
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        try {
-                            const imported = JSON.parse(ev.target.result);
-                            if(imported.roles && imported.tags) {
-                                if(confirm('覆盖当前数据？')) {
-                                    appData = imported; selectedRoleIds.clear(); saveData(true);
-                                    currentView='home'; homeSearchKeyword=''; genderFilter='all'; sortMode='smart'; render();
-                                }
-                            } else alert('格式错误');
-                        } catch(err) { alert('解析失败'); }
-                    };
-                    reader.readAsText(file);
-                };
-                inp.click();
-            });
-            document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', (e) => {
-                const v = i.dataset.view;
-                if(v==='home') currentView='home';
-                else if(v==='add') { currentView='add'; editingRoleId=null; }
-                else if(v==='tags') currentView='tags';
-                render();
-            }));
-            updateBatchUI();
+            document.getElementById('exportBtn').addEventListener('click', () => { const dataStr = JSON.stringify(appData); const blob = new Blob([dataStr], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `收藏册_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url); });
+            document.getElementById('importBtn').addEventListener('click', () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='.json'; inp.onchange = (e) => { const file = e.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = (ev) => { try { const imported = JSON.parse(ev.target.result); if(imported.roles && imported.tags) { if(confirm('覆盖当前数据？')) { appData = imported; saveData(true); currentView='home'; homeSearchKeyword=''; genderFilter='all'; sortMode='smart'; render(); } } else alert('格式错误'); } catch(err) { alert('解析失败'); } }; reader.readAsText(file); }; inp.click(); });
+            document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', (e) => { const v = i.dataset.view; if(v==='home') currentView='home'; else if(v==='add') { currentView='add'; editingRoleId=null; } else if(v==='tags') currentView='tags'; render(); }));
         }
 
         function attachCardClicks() {
-            document.querySelectorAll('.card').forEach(c => c.addEventListener('click', (e) => {
-                if (e.target.classList.contains('card-select-checkbox')) return;
-                if(c.dataset.roleId) { editingRoleId = c.dataset.roleId; currentView = 'detail'; render(); }
-            }));
+            document.querySelectorAll('.card').forEach(c => c.addEventListener('click', (e) => { if(c.dataset.roleId) { editingRoleId = c.dataset.roleId; currentView = 'detail'; render(); } }));
         }
 
         function escapeHtml(t) { return String(t).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
 
-        // 添加页面
         function renderAddPage(container) {
             container.innerHTML = `
             <div class="header"><h1 class="art-title">明日方舟</h1><button class="btn secondary" id="backToHomeBtn">← 返回</button></div>
@@ -580,103 +493,27 @@
                 <button class="btn" id="saveRoleBtn">保存角色</button>
             </div>
             <div class="bottom-nav"><div class="nav-item" data-view="home">🏠 收集册</div><div class="nav-item active">➕ 添加</div><div class="nav-item" data-view="tags">🏷️ 标签</div></div>`;
-            let selectedStars = 1, pastedImageData = null, selectedTag = '未收集', selectedClass = '';
-            let pendingBatch = [];
-            const starSpans = document.querySelectorAll('#starSelector span');
-            starSpans.forEach((s,i) => s.classList.toggle('active', i < selectedStars));
-            starSpans.forEach(s => s.addEventListener('click', (e) => {
-                selectedStars = parseInt(e.target.dataset.star);
-                starSpans.forEach((sp, idx) => sp.classList.toggle('active', idx < selectedStars));
-            }));
-            const tagOpts = document.querySelectorAll('#addTagSelector .tag-option');
-            tagOpts.forEach(o => o.classList.toggle('selected', o.dataset.tag === selectedTag));
-            tagOpts.forEach(o => o.addEventListener('click', () => {
-                selectedTag = o.dataset.tag;
-                tagOpts.forEach(t => t.classList.toggle('selected', t.dataset.tag === selectedTag));
-            }));
-            const classOpts = document.querySelectorAll('#classSelector .tag-option');
-            classOpts.forEach(o => o.classList.toggle('selected', o.dataset.class === selectedClass));
-            classOpts.forEach(o => o.addEventListener('click', () => {
-                selectedClass = o.dataset.class;
-                classOpts.forEach(c => c.classList.toggle('selected', c.dataset.class === selectedClass));
-            }));
-            const pasteArea = document.getElementById('pasteArea'), pasteHint = document.getElementById('pasteHint'), pastePreview = document.getElementById('pastePreview');
-            pasteArea.addEventListener('click', () => pasteArea.focus());
-            pasteArea.addEventListener('paste', async (e) => {
-                const items = e.clipboardData?.items;
-                for(let item of items) {
-                    if(item.type.match(/^image\//)) {
-                        e.preventDefault();
-                        const blob = item.getAsFile();
-                        try {
-                            const compressed = await compressImage(blob);
-                            pastedImageData = compressed;
-                            pastePreview.src = compressed;
-                            pastePreview.style.display = 'block';
-                            pasteHint.style.display = 'none';
-                            pasteArea.classList.add('filled');
-                        } catch(err) { alert('压缩失败'); }
-                        break;
-                    }
-                }
-            });
-            document.getElementById('batchImportBtn').addEventListener('click', () => {
-                const text = document.getElementById('batchText').value;
-                if(!text.trim()) return;
-                pendingBatch = parseBatchText(text);
-                document.getElementById('batchPreview').style.display = 'block';
-                document.getElementById('batchPreview').innerHTML = pendingBatch.map(r => `${r.name} | ${r.props.职业||'无'} | ★${r.stars} | ${r.tags[0]}`).join('\n');
-                document.getElementById('confirmBatchBtn').style.display = 'block';
-            });
-            document.getElementById('confirmBatchBtn').addEventListener('click', () => {
-                if(!pendingBatch.length) return;
-                appData.roles.push(...pendingBatch);
-                if(saveData()) alert(`成功添加 ${pendingBatch.length} 个角色`);
-                else alert("保存失败");
-                document.getElementById('batchText').value = '';
-                document.getElementById('batchPreview').style.display = 'none';
-                document.getElementById('confirmBatchBtn').style.display = 'none';
-                pendingBatch = [];
-                currentView = 'home'; render();
-            });
+            let selectedStars = 1, pastedImageData = null, selectedTag = '未收集', selectedClass = ''; let pendingBatch = [];
+            const starSpans = document.querySelectorAll('#starSelector span'); starSpans.forEach((s,i) => s.classList.toggle('active', i < selectedStars)); starSpans.forEach(s => s.addEventListener('click', (e) => { selectedStars = parseInt(e.target.dataset.star); starSpans.forEach((sp, idx) => sp.classList.toggle('active', idx < selectedStars)); }));
+            const tagOpts = document.querySelectorAll('#addTagSelector .tag-option'); tagOpts.forEach(o => o.classList.toggle('selected', o.dataset.tag === selectedTag)); tagOpts.forEach(o => o.addEventListener('click', () => { selectedTag = o.dataset.tag; tagOpts.forEach(t => t.classList.toggle('selected', t.dataset.tag === selectedTag)); }));
+            const classOpts = document.querySelectorAll('#classSelector .tag-option'); classOpts.forEach(o => o.classList.toggle('selected', o.dataset.class === selectedClass)); classOpts.forEach(o => o.addEventListener('click', () => { selectedClass = o.dataset.class; classOpts.forEach(c => c.classList.toggle('selected', c.dataset.class === selectedClass)); }));
+            const pasteArea = document.getElementById('pasteArea'), pasteHint = document.getElementById('pasteHint'), pastePreview = document.getElementById('pastePreview'); pasteArea.addEventListener('click', () => pasteArea.focus()); pasteArea.addEventListener('paste', async (e) => { const items = e.clipboardData?.items; for(let item of items) { if(item.type.match(/^image\//)) { e.preventDefault(); const blob = item.getAsFile(); try { const compressed = await compressImage(blob); pastedImageData = compressed; pastePreview.src = compressed; pastePreview.style.display = 'block'; pasteHint.style.display = 'none'; pasteArea.classList.add('filled'); } catch(err) { alert('压缩失败'); } break; } } });
+            document.getElementById('batchImportBtn').addEventListener('click', () => { const text = document.getElementById('batchText').value; if(!text.trim()) return; pendingBatch = parseBatchText(text); document.getElementById('batchPreview').style.display = 'block'; document.getElementById('batchPreview').innerHTML = pendingBatch.map(r => `${r.name} | ${r.props.职业||'无'} | ★${r.stars} | ${r.tags[0]}`).join('\n'); document.getElementById('confirmBatchBtn').style.display = 'block'; });
+            document.getElementById('confirmBatchBtn').addEventListener('click', () => { if(!pendingBatch.length) return; appData.roles.push(...pendingBatch); if(saveData()) alert(`成功添加 ${pendingBatch.length} 个角色`); else alert("保存失败"); document.getElementById('batchText').value = ''; document.getElementById('batchPreview').style.display = 'none'; document.getElementById('confirmBatchBtn').style.display = 'none'; pendingBatch = []; currentView = 'home'; render(); });
             document.getElementById('backToHomeBtn').addEventListener('click', () => goBackToHome());
-            document.getElementById('saveRoleBtn').addEventListener('click', () => {
-                const name = document.getElementById('roleNameInput').value.trim();
-                if(!name) { alert("请输入角色名称"); return; }
-                const props = {}; if(selectedClass) props['职业'] = selectedClass;
-                const genderRadio = document.querySelector('input[name="gender"]:checked');
-                const newRole = {
-                    id: genId(), name, image: pastedImageData || '', tags: [selectedTag], stars: selectedStars, props,
-                    notes: '', level: '', skillLevel: '', module: '',
-                    levelGraduated: false, skillGraduated: false, moduleGraduated: false,
-                    gender: genderRadio ? genderRadio.value : '', releaseDate: document.getElementById('releaseDateInput').value
-                };
-                appData.roles.push(newRole);
-                if(saveData()) { currentView = 'home'; render(); }
-                else alert("保存失败");
-            });
-            document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', (e) => {
-                const v = i.dataset.view; if(v==='home') currentView='home'; else if(v==='tags') currentView='tags'; render();
-            }));
+            document.getElementById('saveRoleBtn').addEventListener('click', () => { const name = document.getElementById('roleNameInput').value.trim(); if(!name) { alert("请输入角色名称"); return; } const props = {}; if(selectedClass) props['职业'] = selectedClass; const genderRadio = document.querySelector('input[name="gender"]:checked'); const newRole = { id: genId(), name, image: pastedImageData || '', tags: [selectedTag], stars: selectedStars, props, notes: '', level: '', skillLevel: '', module: '', levelGraduated: false, skillGraduated: false, moduleGraduated: false, gender: genderRadio ? genderRadio.value : '', releaseDate: document.getElementById('releaseDateInput').value, inTraining: false }; appData.roles.push(newRole); if(saveData()) { currentView = 'home'; render(); } else alert("保存失败"); });
+            document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', (e) => { const v = i.dataset.view; if(v==='home') currentView='home'; else if(v==='tags') currentView='tags'; render(); }));
         }
 
-        // 标签页
         function renderTagsPage(container) {
             container.innerHTML = `<div class="header"><h1 class="art-title">明日方舟</h1><button class="btn secondary" id="backFromTagsBtn">← 返回</button></div><div class="main-content" style="max-width:600px;margin:0 auto"><p>勾选"计入收集"的标签代表已收集。</p><div id="tagsList"></div><div class="form-group" style="margin-top:24px;"><input id="newTagNameInput" placeholder="新标签名称"><input type="color" id="newTagColorInput" value="#9E9E9E" style="width:100%;margin-top:10px;"><button class="btn" id="addTagBtn">添加标签</button></div></div><div class="bottom-nav"><div class="nav-item" data-view="home">🏠 收集册</div><div class="nav-item" data-view="add">➕ 添加</div><div class="nav-item active">🏷️ 标签</div></div>`;
-            function renderList() {
-                const list = document.getElementById('tagsList');
-                list.innerHTML = appData.tags.map(t => `<div style="display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid #f0f0f0;"><span style="background:${t.color};width:24px;height:24px;border-radius:50%;"></span><input value="${t.name.replace(/"/g,'&quot;')}" data-tagid="${t.id}" class="tag-name-input" style="flex:1;"><label><input type="checkbox" ${t.countAsCollected?'checked':''} data-tagid="${t.id}" class="collect-checkbox"> 计入收集</label><button data-tagid="${t.id}" class="delete-tag-btn">🗑️</button></div>`).join('');
-                document.querySelectorAll('.tag-name-input').forEach(i => i.addEventListener('change', (e) => { const tag = appData.tags.find(t => t.id === i.dataset.tagid); if(tag) { const old = tag.name; tag.name = i.value.trim()||old; appData.roles.forEach(r => { const idx = r.tags.indexOf(old); if(idx!==-1) r.tags[idx]=tag.name; }); saveData(); renderList(); } }));
-                document.querySelectorAll('.collect-checkbox').forEach(c => c.addEventListener('change', (e) => { const tag = appData.tags.find(t => t.id === c.dataset.tagid); if(tag) { tag.countAsCollected = c.checked; saveData(); } }));
-                document.querySelectorAll('.delete-tag-btn').forEach(b => b.addEventListener('click', () => { const tag = appData.tags.find(t => t.id === b.dataset.tagid); if(tag && confirm(`删除标签"${tag.name}"？`)) { appData.roles.forEach(r => r.tags = r.tags.filter(tn => tn !== tag.name)); appData.tags = appData.tags.filter(t => t.id !== tag.id); saveData(); renderList(); } }));
-            }
+            function renderList() { const list = document.getElementById('tagsList'); list.innerHTML = appData.tags.map(t => `<div style="display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid #f0f0f0;"><span style="background:${t.color};width:24px;height:24px;border-radius:50%;"></span><input value="${t.name.replace(/"/g,'&quot;')}" data-tagid="${t.id}" class="tag-name-input" style="flex:1;"><label><input type="checkbox" ${t.countAsCollected?'checked':''} data-tagid="${t.id}" class="collect-checkbox"> 计入收集</label><button data-tagid="${t.id}" class="delete-tag-btn">🗑️</button></div>`).join(''); document.querySelectorAll('.tag-name-input').forEach(i => i.addEventListener('change', (e) => { const tag = appData.tags.find(t => t.id === i.dataset.tagid); if(tag) { const old = tag.name; tag.name = i.value.trim()||old; appData.roles.forEach(r => { const idx = r.tags.indexOf(old); if(idx!==-1) r.tags[idx]=tag.name; }); saveData(); renderList(); } })); document.querySelectorAll('.collect-checkbox').forEach(c => c.addEventListener('change', (e) => { const tag = appData.tags.find(t => t.id === c.dataset.tagid); if(tag) { tag.countAsCollected = c.checked; saveData(); } })); document.querySelectorAll('.delete-tag-btn').forEach(b => b.addEventListener('click', () => { const tag = appData.tags.find(t => t.id === b.dataset.tagid); if(tag && confirm(`删除标签"${tag.name}"？`)) { appData.roles.forEach(r => r.tags = r.tags.filter(tn => tn !== tag.name)); appData.tags = appData.tags.filter(t => t.id !== tag.id); saveData(); renderList(); } })); }
             renderList();
             document.getElementById('addTagBtn').addEventListener('click', () => { const n = document.getElementById('newTagNameInput').value.trim(); if(!n) return; if(appData.tags.some(t => t.name === n)) return alert('标签已存在'); appData.tags.push({ id: genId(), name: n, color: document.getElementById('newTagColorInput').value, countAsCollected: false }); saveData(); document.getElementById('newTagNameInput').value=''; renderList(); });
             document.getElementById('backFromTagsBtn').addEventListener('click', () => goBackToHome());
             document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', (e) => { const v = i.dataset.view; if(v==='home') currentView='home'; else if(v==='add') { currentView='add'; editingRoleId=null; } render(); }));
         }
 
-        // 详情页
         function renderDetailPage(container) {
             const role = appData.roles.find(r => r.id === editingRoleId);
             if (!role) { currentView = 'home'; render(); return; }
@@ -691,51 +528,20 @@
                 <div class="form-group"><label>实装日期</label><input id="editReleaseDate" type="text" value="${role.releaseDate||''}" placeholder="YYYY-MM-DD 或粘贴"></div>
                 <div class="form-group"><label>稀有度</label><div class="star-selector" id="editStarSelector">${[1,2,3,4,5,6].map(s => `<span data-star="${s}" class="${(role.stars||1)>=s?'active':''}">★</span>`).join('')}</div></div>
                 <div class="form-group"><label>收集状态</label><div class="tag-selector" id="editTagSelector"><span class="tag-option ${role.tags[0]==='未收集'?'selected':''}" data-tag="未收集">未收集</span><span class="tag-option ${role.tags[0]==='已收集'?'selected':''}" data-tag="已收集">已收集</span></div></div>
+                <div class="form-group"><label class="training-checkbox-label"><input type="checkbox" id="trainingCheckbox" ${role.inTraining?'checked':''}> 🔥 培养中 (最多3个)</label></div>
                 <div class="edit-row ${role.levelGraduated?'graduated-row':''}"><label>等级</label><input id="editLevel" value="${escapeHtml(role.level)}"><button class="graduate-btn ${role.levelGraduated?'graduated':''}" id="levelGraduateBtn">${role.levelGraduated?'已大圆满':'大圆满'}</button></div>
                 <div class="edit-row ${role.skillGraduated?'graduated-row':''}"><label>技能等级</label><input id="editSkillLevel" value="${escapeHtml(role.skillLevel)}"><button class="graduate-btn ${role.skillGraduated?'graduated':''}" id="skillGraduateBtn">${role.skillGraduated?'已大圆满':'大圆满'}</button></div>
                 <div class="edit-row ${role.moduleGraduated?'graduated-row':''}"><label>模组</label><input id="editModule" value="${escapeHtml(role.module)}"><button class="graduate-btn ${role.moduleGraduated?'graduated':''}" id="moduleGraduateBtn">${role.moduleGraduated?'已大圆满':'大圆满'}</button></div>
                 <button class="btn" id="saveEditBtn">保存修改</button>
                 <button class="btn secondary" id="deleteRoleBtn" style="margin-top:10px;background:#ffebee;color:#c62828;">删除角色</button>
             </div>`;
-            let newImgData = null;
-            window._detailNewImageData = null;
+            let newImgData = null; window._detailNewImageData = null;
             const pasteArea = document.getElementById('editPasteArea'), pasteHint = document.getElementById('editPasteHint');
-            let preview = document.getElementById('editPastePreview');
-            if(!preview) { preview = document.createElement('img'); preview.id='editPastePreview'; preview.style.display='none'; pasteArea.appendChild(preview); }
+            let preview = document.getElementById('editPastePreview'); if(!preview) { preview = document.createElement('img'); preview.id='editPastePreview'; preview.style.display='none'; pasteArea.appendChild(preview); }
             pasteArea.addEventListener('click',()=>pasteArea.focus());
-            pasteArea.addEventListener('paste', async (e) => {
-                const items = e.clipboardData?.items;
-                for(let item of items) {
-                    if(item.type.match(/^image\//)) {
-                        e.preventDefault();
-                        const blob = item.getAsFile();
-                        try {
-                            const compressed = await compressImage(blob);
-                            newImgData = compressed;
-                            window._detailNewImageData = compressed;
-                            preview.src = compressed;
-                            preview.style.display='block';
-                            if(pasteHint) pasteHint.style.display='none';
-                            pasteArea.classList.add('filled');
-                        } catch(err) { alert('压缩失败'); }
-                        break;
-                    }
-                }
-            });
-            let selectedStatus = role.tags[0] || '未收集';
-            const tagOpts = document.querySelectorAll('#editTagSelector .tag-option');
-            tagOpts.forEach(o => o.classList.toggle('selected', o.dataset.tag === selectedStatus));
-            tagOpts.forEach(o => o.addEventListener('click', () => {
-                selectedStatus = o.dataset.tag;
-                tagOpts.forEach(t => t.classList.toggle('selected', t.dataset.tag === selectedStatus));
-            }));
-            let editStars = role.stars;
-            const starSpans = document.querySelectorAll('#editStarSelector span');
-            starSpans.forEach((s,i) => s.classList.toggle('active', i < editStars));
-            starSpans.forEach(s => s.addEventListener('click', (e) => {
-                editStars = parseInt(e.target.dataset.star);
-                starSpans.forEach((sp, idx) => sp.classList.toggle('active', idx < editStars));
-            }));
+            pasteArea.addEventListener('paste', async (e) => { const items = e.clipboardData?.items; for(let item of items) { if(item.type.match(/^image\//)) { e.preventDefault(); const blob = item.getAsFile(); try { const compressed = await compressImage(blob); newImgData = compressed; window._detailNewImageData = compressed; preview.src = compressed; preview.style.display='block'; if(pasteHint) pasteHint.style.display='none'; pasteArea.classList.add('filled'); } catch(err) { alert('压缩失败'); } break; } } });
+            let selectedStatus = role.tags[0] || '未收集'; const tagOpts = document.querySelectorAll('#editTagSelector .tag-option'); tagOpts.forEach(o => o.classList.toggle('selected', o.dataset.tag === selectedStatus)); tagOpts.forEach(o => o.addEventListener('click', () => { selectedStatus = o.dataset.tag; tagOpts.forEach(t => t.classList.toggle('selected', t.dataset.tag === selectedStatus)); }));
+            let editStars = role.stars; const starSpans = document.querySelectorAll('#editStarSelector span'); starSpans.forEach((s,i) => s.classList.toggle('active', i < editStars)); starSpans.forEach(s => s.addEventListener('click', (e) => { editStars = parseInt(e.target.dataset.star); starSpans.forEach((sp, idx) => sp.classList.toggle('active', idx < editStars)); }));
             let levelGrad = role.levelGraduated, skillGrad = role.skillGraduated, moduleGrad = role.moduleGraduated;
             const levelBtn = document.getElementById('levelGraduateBtn'), skillBtn = document.getElementById('skillGraduateBtn'), moduleBtn = document.getElementById('moduleGraduateBtn');
             const autoUpdate = () => { if(isFullyGraduated({levelGraduated: levelGrad, skillGraduated: skillGrad, moduleGraduated: moduleGrad}) && selectedStatus !== '已收集') { selectedStatus = '已收集'; tagOpts.forEach(t => t.classList.toggle('selected', t.dataset.tag === selectedStatus)); } };
