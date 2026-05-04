@@ -41,7 +41,7 @@
         .card-select-checkbox{transform:scale(1.4);cursor:pointer;accent-color:#2196F3}
         .avatar-container{position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
         .profession-tag-vertical{position:absolute;left:-28px;top:50%;transform:translateY(-50%);background:#607D8B;color:#fff;font-size:0.7rem;font-weight:600;padding:4px 4px;border-radius:10px;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:1px;box-shadow:0 2px 4px rgba(0,0,0,0.1);z-index:2;white-space:nowrap;line-height:1.2}
-        .avatar{width:90px;height:90px;background:#e9ecef;border-radius:50%;background-size:cover;background-position:center;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.08);position:relative;z-index:1}
+        .avatar{width:90px;height:90px;background:#ffffff;border-radius:50%;background-size:cover;background-position:center;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.08);position:relative;z-index:1}
         .card .name{font-weight:600;font-size:1rem;color:#1e1e1e;margin-bottom:4px;word-break:break-word}
         .stars{color:#FFB300;font-size:1.6rem;letter-spacing:3px;text-shadow:0 1px 2px rgba(0,0,0,0.1);margin-bottom:2px;line-height:1.2}
         .status-dot{position:absolute;top:30px;right:12px;width:16px;height:16px;border-radius:50%;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
@@ -131,6 +131,7 @@
         const COMPRESS_QUALITY = 0.7;
         let selectedRoleIds = new Set();
 
+        // 修复压缩函数：先铺白色背景，避免透明区域变黑
         async function compressImage(blobOrDataUrl) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
@@ -152,6 +153,10 @@
                     canvas.width = width;
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
+                    // 先画白色背景
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, width, height);
+                    // 再画图片
                     ctx.drawImage(img, 0, 0, width, height);
                     resolve(canvas.toDataURL('image/jpeg', COMPRESS_QUALITY));
                 };
@@ -197,7 +202,6 @@
             const usedMB = (used / 1024 / 1024).toFixed(2);
             const panel = document.getElementById('storageInfoPanel');
             if (panel) {
-                // 只显示已用多少，无需总量
                 panel.innerHTML = `💾 已用 ${usedMB} MB`;
             }
         }
@@ -236,6 +240,11 @@
             return role.levelGraduated && role.skillGraduated && role.moduleGraduated;
         }
 
+        function isHalfGreat(role) {
+            const count = (role.levelGraduated ? 1 : 0) + (role.skillGraduated ? 1 : 0) + (role.moduleGraduated ? 1 : 0);
+            return count === 2 && !role.tags.includes('未收集');
+        }
+
         function sortRoles(roles) {
             if (sortMode === 'release_asc') return [...roles].sort((a,b) => (a.releaseDate||'').localeCompare(b.releaseDate||''));
             if (sortMode === 'release_desc') return [...roles].sort((a,b) => (b.releaseDate||'').localeCompare(a.releaseDate||''));
@@ -251,7 +260,8 @@
             let filtered = appData.roles;
             if (primaryFilter === '未收集') filtered = filtered.filter(r => r.tags && r.tags.includes('未收集'));
             else if (primaryFilter === '已收集') filtered = filtered.filter(r => r.tags && r.tags.includes('已收集') && !isFullyGraduated(r));
-            else if (primaryFilter === '毕业') filtered = filtered.filter(r => isFullyGraduated(r));
+            else if (primaryFilter === '半步大圆满') filtered = filtered.filter(r => isHalfGreat(r));
+            else if (primaryFilter === '大圆满') filtered = filtered.filter(r => isFullyGraduated(r));
             if (secondaryFilter) filtered = filtered.filter(r => r.props && r.props.职业 === secondaryFilter);
             if (homeSearchKeyword.trim()) {
                 const kw = homeSearchKeyword.trim().toLowerCase();
@@ -311,7 +321,7 @@
                 role.gender = genderRadio ? genderRadio.value : '';
                 role.releaseDate = releaseDateInput ? releaseDateInput.value : '';
 
-                if (levelGraduated && skillGraduated && moduleGraduated) role.tags = ['已收集'];
+                if (isFullyGraduated(role)) role.tags = ['已收集'];
                 else role.tags = [selectedStatus];
 
                 saveData();
@@ -386,14 +396,15 @@
                         <div class="filter-bar" id="primaryFilterBar">
                             <button class="filter-chip" data-filter="未收集">未收集</button>
                             <button class="filter-chip" data-filter="已收集">已收集</button>
+                            <button class="filter-chip" data-filter="半步大圆满">半步大圆满</button>
+                            <button class="filter-chip" data-filter="大圆满">大圆满</button>
                             <button class="filter-chip active" data-filter="all">全部</button>
-                            <button class="filter-chip" data-filter="毕业">毕业</button>
                         </div>
                         <div class="adv-filter-toggle" id="advFilterToggle">⚙️ 高级筛选 ▼</div>
                     </div>
                     <div class="adv-filter-panel" id="advFilterPanel">
                         <div class="adv-filter-group"><label>性别：</label><div class="adv-radio-group"><span><input type="radio" name="genderFilter" value="all" ${genderFilter==='all'?'checked':''}> 全部</span><span><input type="radio" name="genderFilter" value="男" ${genderFilter==='男'?'checked':''}> 男</span><span><input type="radio" name="genderFilter" value="女" ${genderFilter==='女'?'checked':''}> 女</span></div></div>
-                        <div class="adv-filter-group"><label>排序方式：</label><select id="sortModeSelect" class="sort-select"><option value="smart" ${sortMode==='smart'?'selected':''}>智能排序(毕业+星级)</option><option value="release_asc" ${sortMode==='release_asc'?'selected':''}>实装正序(旧→新)</option><option value="release_desc" ${sortMode==='release_desc'?'selected':''}>实装倒序(新→旧)</option></select></div>
+                        <div class="adv-filter-group"><label>排序方式：</label><select id="sortModeSelect" class="sort-select"><option value="smart" ${sortMode==='smart'?'selected':''}>智能排序(大圆满+星级)</option><option value="release_asc" ${sortMode==='release_asc'?'selected':''}>实装正序(旧→新)</option><option value="release_desc" ${sortMode==='release_desc'?'selected':''}>实装倒序(新→旧)</option></select></div>
                     </div>
                     <div class="class-filter-bar" id="classFilterBar">${CLASS_OPTIONS.map(c => `<button class="class-filter-chip" data-class="${c}">${c}</button>`).join('')}</div>
                 </div>
@@ -553,15 +564,15 @@
 
         function escapeHtml(t) { return String(t).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
 
-        // 添加页面 (日期改为文本输入)
+        // 添加页面
         function renderAddPage(container) {
             container.innerHTML = `
             <div class="header"><h1 class="art-title">明日方舟</h1><button class="btn secondary" id="backToHomeBtn">← 返回</button></div>
             <div class="main-content" style="max-width:600px; margin:0 auto;">
                 <div class="form-group"><label>角色名称 *</label><input id="roleNameInput" placeholder="例如：能天使"></div>
                 <div class="form-group"><label>性别</label><div class="gender-group"><label><input type="radio" name="gender" value="男"> 男</label><label><input type="radio" name="gender" value="女"> 女</label><label><input type="radio" name="gender" value="" checked> 未知</label></div></div>
-                <div class="form-group"><label>实装日期</label><input id="releaseDateInput" type="text" placeholder="YYYY-MM-DD 或粘贴日期"></div>
-                <div class="form-group"><label>头像图片 (压缩至128px高清)</label><div class="paste-area" id="pasteArea" tabindex="0"><span id="pasteHint">📋 点击粘贴图片，自动压缩</span><img id="pastePreview" style="display:none;"></div></div>
+                <div class="form-group"><label>实装日期</label><input id="releaseDateInput" type="text" placeholder="YYYY-MM-DD 或粘贴"></div>
+                <div class="form-group"><label>头像图片 (压缩至128px高清，白底)</label><div class="paste-area" id="pasteArea" tabindex="0"><span id="pasteHint">📋 点击粘贴图片，自动压缩</span><img id="pastePreview" style="display:none;"></div></div>
                 <div class="form-group"><label>稀有度</label><div class="star-selector" id="starSelector">${[1,2,3,4,5,6].map(s => `<span data-star="${s}">★</span>`).join('')}</div></div>
                 <div class="form-group"><label>收集状态</label><div class="tag-selector" id="addTagSelector"><span class="tag-option" data-tag="未收集">未收集</span><span class="tag-option" data-tag="已收集">已收集</span></div></div>
                 <div class="form-group"><label>职业</label><div class="tag-selector" id="classSelector">${CLASS_OPTIONS.map(c => `<span class="tag-option" data-class="${c}">${c}</span>`).join('')}</div></div>
@@ -649,7 +660,7 @@
             }));
         }
 
-        // 标签管理页面
+        // 标签页
         function renderTagsPage(container) {
             container.innerHTML = `<div class="header"><h1 class="art-title">明日方舟</h1><button class="btn secondary" id="backFromTagsBtn">← 返回</button></div><div class="main-content" style="max-width:600px;margin:0 auto"><p>勾选"计入收集"的标签代表已收集。</p><div id="tagsList"></div><div class="form-group" style="margin-top:24px;"><input id="newTagNameInput" placeholder="新标签名称"><input type="color" id="newTagColorInput" value="#9E9E9E" style="width:100%;margin-top:10px;"><button class="btn" id="addTagBtn">添加标签</button></div></div><div class="bottom-nav"><div class="nav-item" data-view="home">🏠 收集册</div><div class="nav-item" data-view="add">➕ 添加</div><div class="nav-item active">🏷️ 标签</div></div>`;
             function renderList() {
@@ -665,7 +676,7 @@
             document.querySelectorAll('.nav-item').forEach(i => i.addEventListener('click', (e) => { const v = i.dataset.view; if(v==='home') currentView='home'; else if(v==='add') { currentView='add'; editingRoleId=null; } render(); }));
         }
 
-        // 详情页面 (日期改为文本输入)
+        // 详情页
         function renderDetailPage(container) {
             const role = appData.roles.find(r => r.id === editingRoleId);
             if (!role) { currentView = 'home'; render(); return; }
@@ -674,15 +685,15 @@
             container.innerHTML = `
             <div class="header"><div style="display:flex;align-items:center;gap:12px;"><button class="nav-arrow ${!hasPrev?'disabled':''}" id="detailPrevBtn">◀</button><h1 class="art-title" style="font-size:1.5rem;">角色详情</h1><button class="nav-arrow ${!hasNext?'disabled':''}" id="detailNextBtn">▶</button></div><div style="display:flex;gap:12px;"><span class="role-counter">${pos}/${total}</span><button class="btn secondary" id="backFromDetailBtn" style="padding:8px 16px;">← 返回</button></div></div>
             <div class="main-content" style="max-width:600px;margin:0 auto;">
-                <div class="form-group"><label>头像图片 (自动压缩)</label><div class="paste-area" id="editPasteArea" tabindex="0">${role.image ? `<img src="${role.image.replace(/"/g,'&quot;')}" id="editPastePreview" style="display:block;max-width:120px;margin:8px auto;">` : ''}<span id="editPasteHint" style="${role.image?'display:none':''}">📋 粘贴新图(自动压缩)</span></div></div>
+                <div class="form-group"><label>头像图片 (自动压缩，白底)</label><div class="paste-area" id="editPasteArea" tabindex="0">${role.image ? `<img src="${role.image.replace(/"/g,'&quot;')}" id="editPastePreview" style="display:block;max-width:120px;margin:8px auto;">` : ''}<span id="editPasteHint" style="${role.image?'display:none':''}">📋 粘贴新图(自动压缩)</span></div></div>
                 <div class="form-group"><label>角色名称</label><input id="editName" value="${escapeHtml(role.name)}"></div>
                 <div class="form-group"><label>性别</label><div class="gender-group"><label><input type="radio" name="editGender" value="男" ${role.gender==='男'?'checked':''}> 男</label><label><input type="radio" name="editGender" value="女" ${role.gender==='女'?'checked':''}> 女</label><label><input type="radio" name="editGender" value="" ${!role.gender?'checked':''}> 未知</label></div></div>
                 <div class="form-group"><label>实装日期</label><input id="editReleaseDate" type="text" value="${role.releaseDate||''}" placeholder="YYYY-MM-DD 或粘贴"></div>
                 <div class="form-group"><label>稀有度</label><div class="star-selector" id="editStarSelector">${[1,2,3,4,5,6].map(s => `<span data-star="${s}" class="${(role.stars||1)>=s?'active':''}">★</span>`).join('')}</div></div>
                 <div class="form-group"><label>收集状态</label><div class="tag-selector" id="editTagSelector"><span class="tag-option ${role.tags[0]==='未收集'?'selected':''}" data-tag="未收集">未收集</span><span class="tag-option ${role.tags[0]==='已收集'?'selected':''}" data-tag="已收集">已收集</span></div></div>
-                <div class="edit-row ${role.levelGraduated?'graduated-row':''}"><label>等级</label><input id="editLevel" value="${escapeHtml(role.level)}"><button class="graduate-btn ${role.levelGraduated?'graduated':''}" id="levelGraduateBtn">${role.levelGraduated?'已毕业':'毕业'}</button></div>
-                <div class="edit-row ${role.skillGraduated?'graduated-row':''}"><label>技能等级</label><input id="editSkillLevel" value="${escapeHtml(role.skillLevel)}"><button class="graduate-btn ${role.skillGraduated?'graduated':''}" id="skillGraduateBtn">${role.skillGraduated?'已毕业':'毕业'}</button></div>
-                <div class="edit-row ${role.moduleGraduated?'graduated-row':''}"><label>模组</label><input id="editModule" value="${escapeHtml(role.module)}"><button class="graduate-btn ${role.moduleGraduated?'graduated':''}" id="moduleGraduateBtn">${role.moduleGraduated?'已毕业':'毕业'}</button></div>
+                <div class="edit-row ${role.levelGraduated?'graduated-row':''}"><label>等级</label><input id="editLevel" value="${escapeHtml(role.level)}"><button class="graduate-btn ${role.levelGraduated?'graduated':''}" id="levelGraduateBtn">${role.levelGraduated?'已大圆满':'大圆满'}</button></div>
+                <div class="edit-row ${role.skillGraduated?'graduated-row':''}"><label>技能等级</label><input id="editSkillLevel" value="${escapeHtml(role.skillLevel)}"><button class="graduate-btn ${role.skillGraduated?'graduated':''}" id="skillGraduateBtn">${role.skillGraduated?'已大圆满':'大圆满'}</button></div>
+                <div class="edit-row ${role.moduleGraduated?'graduated-row':''}"><label>模组</label><input id="editModule" value="${escapeHtml(role.module)}"><button class="graduate-btn ${role.moduleGraduated?'graduated':''}" id="moduleGraduateBtn">${role.moduleGraduated?'已大圆满':'大圆满'}</button></div>
                 <button class="btn" id="saveEditBtn">保存修改</button>
                 <button class="btn secondary" id="deleteRoleBtn" style="margin-top:10px;background:#ffebee;color:#c62828;">删除角色</button>
             </div>`;
@@ -727,10 +738,10 @@
             }));
             let levelGrad = role.levelGraduated, skillGrad = role.skillGraduated, moduleGrad = role.moduleGraduated;
             const levelBtn = document.getElementById('levelGraduateBtn'), skillBtn = document.getElementById('skillGraduateBtn'), moduleBtn = document.getElementById('moduleGraduateBtn');
-            const autoUpdate = () => { if(levelGrad && skillGrad && moduleGrad && selectedStatus !== '已收集') { selectedStatus = '已收集'; tagOpts.forEach(t => t.classList.toggle('selected', t.dataset.tag === selectedStatus)); } };
-            levelBtn.addEventListener('click', () => { levelGrad = !levelGrad; levelBtn.closest('.edit-row').classList.toggle('graduated-row', levelGrad); levelBtn.classList.toggle('graduated', levelGrad); levelBtn.textContent = levelGrad ? '已毕业' : '毕业'; autoUpdate(); });
-            skillBtn.addEventListener('click', () => { skillGrad = !skillGrad; skillBtn.closest('.edit-row').classList.toggle('graduated-row', skillGrad); skillBtn.classList.toggle('graduated', skillGrad); skillBtn.textContent = skillGrad ? '已毕业' : '毕业'; autoUpdate(); });
-            moduleBtn.addEventListener('click', () => { moduleGrad = !moduleGrad; moduleBtn.closest('.edit-row').classList.toggle('graduated-row', moduleGrad); moduleBtn.classList.toggle('graduated', moduleGrad); moduleBtn.textContent = moduleGrad ? '已毕业' : '毕业'; autoUpdate(); });
+            const autoUpdate = () => { if(isFullyGraduated({levelGraduated: levelGrad, skillGraduated: skillGrad, moduleGraduated: moduleGrad}) && selectedStatus !== '已收集') { selectedStatus = '已收集'; tagOpts.forEach(t => t.classList.toggle('selected', t.dataset.tag === selectedStatus)); } };
+            levelBtn.addEventListener('click', () => { levelGrad = !levelGrad; levelBtn.closest('.edit-row').classList.toggle('graduated-row', levelGrad); levelBtn.classList.toggle('graduated', levelGrad); levelBtn.textContent = levelGrad ? '已大圆满' : '大圆满'; autoUpdate(); });
+            skillBtn.addEventListener('click', () => { skillGrad = !skillGrad; skillBtn.closest('.edit-row').classList.toggle('graduated-row', skillGrad); skillBtn.classList.toggle('graduated', skillGrad); skillBtn.textContent = skillGrad ? '已大圆满' : '大圆满'; autoUpdate(); });
+            moduleBtn.addEventListener('click', () => { moduleGrad = !moduleGrad; moduleBtn.closest('.edit-row').classList.toggle('graduated-row', moduleGrad); moduleBtn.classList.toggle('graduated', moduleGrad); moduleBtn.textContent = moduleGrad ? '已大圆满' : '大圆满'; autoUpdate(); });
             document.getElementById('saveEditBtn').addEventListener('click', () => { if(saveCurrentDetailChanges()) { currentView = 'home'; render(); } else alert("保存失败"); });
             document.getElementById('deleteRoleBtn').addEventListener('click', () => { if(confirm('永久删除该角色？')) { appData.roles = appData.roles.filter(r => r.id !== editingRoleId); if(saveData()) { currentView = 'home'; render(); } else alert("删除失败"); } });
             document.getElementById('backFromDetailBtn').addEventListener('click', () => goBackToHome());
